@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@actions/core':
     specifier: ^1.10.0
@@ -19,8 +23,8 @@ devDependencies:
     specifier: ^29.5.0
     version: 29.5.0
   '@octokit/graphql-schema':
-    specifier: ^14.5.0
-    version: 14.5.0
+    specifier: ^14.23.0
+    version: 14.23.0
   '@types/jest':
     specifier: ^29.5.1
     version: 29.5.1
@@ -846,8 +850,8 @@ packages:
       universal-user-agent: 6.0.0
     dev: false
 
-  /@octokit/graphql-schema@14.5.0:
-    resolution: {integrity: sha512-LC0X5UGDtEmYZfxcyQTcxa13A+OwKk5Vj0ri68ldGZDuq9OfLCwJ0qNJxaEqnh74DP/MwuEDsZ7xoTy5aI6Ayg==}
+  /@octokit/graphql-schema@14.23.0:
+    resolution: {integrity: sha512-FeQS8VSJN3goz0/c+MpmFyknhbdzCXHVM33pYnncWA0msQC5hkHrQcMr3QaGx9puihHaqMhA2dq4KC0uQMm7Qw==}
     dependencies:
       graphql: 16.6.0
       graphql-tag: 2.12.6(graphql@16.6.0)
