@@ -9,34 +9,33 @@ import Matter, {
   World
 } from 'matter-js'
 import GIFEncoder from 'gif-encoder-2'
-import {CanvasRenderingContext2D, createCanvas} from 'canvas'
-import {load, parse} from 'opentype.js'
+import {createCanvas} from 'canvas'
+import {parse} from 'opentype.js'
 import * as fs from 'fs'
-import {createHTMLWindow, createSVGWindow} from 'svgdom'
-import {SVG, registerWindow} from '@svgdotjs/svg.js'
-// @ts-ignore
-import polyfillSVG2 from '../utils/pathseg.js'
-// @ts-ignore
-import Svg from '../utils/svg.js'
 // @ts-ignore
 import fromVertices from '../utils/bodies.js'
 
-const WIDTH = 800
-const HEIGHT = 400
+const WIDTH = 1200
+const HEIGHT = 500
 
 const PIC_TIME = 6
 
-const xOffset = 40
-const yOffset = -80
 const xMargin = 4
 const yMargin = 4
+
+const boxSize = 15
 
 const totalFrames = 60 * PIC_TIME
 
 export async function renderAnimatedGif(token: string): Promise<void> {
   const [name, weeks] = await getCalendar(token)
 
+  const xOffset =
+    WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
+  const yOffset = -160
+
   const img = createCanvas(WIDTH, HEIGHT)
+  console.log(img.width, img.height)
   const ctx = img.getContext('2d')
 
   const font = parse(fs.readFileSync(`./font/NotoSerifSC-Regular.otf`).buffer)
@@ -44,32 +43,61 @@ export async function renderAnimatedGif(token: string): Promise<void> {
 
   const engine = Engine.create()
 
-  const ground = Bodies.rectangle(400, 410, 810, 20, {isStatic: true})
-  const left = Bodies.rectangle(-10, 200, 20, 400, {isStatic: true})
-  const right = Bodies.rectangle(810, 200, 20, 400, {isStatic: true})
+  const ground = Bodies.rectangle(
+    WIDTH / 2,
+    HEIGHT + boxSize,
+    WIDTH + boxSize,
+    boxSize * 2,
+    {isStatic: true}
+  )
+  const left = Bodies.rectangle(-boxSize, HEIGHT / 2, boxSize * 2, HEIGHT, {
+    isStatic: true
+  })
+  const right = Bodies.rectangle(
+    WIDTH + boxSize,
+    HEIGHT / 2,
+    boxSize * 2,
+    HEIGHT,
+    {isStatic: true}
+  )
   World.add(engine.world, [ground, left, right])
 
-  // Common.setDecomp(require('poly-decomp'))
+  Common.setDecomp(require('poly-decomp'))
 
   const text: Array<Array<Vector>> = []
 
-  const svg = font.getPath("Zxilly", 0, 0, 72).toSVG(2)
-
-  const window = createHTMLWindow()
-  const document = window.document
-
-  registerWindow(window, document)
-  polyfillSVG2(window, window.document)
-
-  SVG(document.documentElement).svg(svg)
-
-  document.documentElement.querySelectorAll('path').forEach(path => {
-    text.push(Svg.pathToVertices(window, path, 30))
+  font.getPaths(name, WIDTH / 2, HEIGHT / 2, 144).forEach(path => {
+    const cmds = path.commands
+    let points: Array<Vector> = []
+    for (let cmd of cmds) {
+      switch (cmd.type) {
+        case 'M':
+        case 'L':
+          points.push(Vector.create(cmd.x, cmd.y))
+          break
+        case 'Q':
+          points.push(Vector.create((cmd.x1 + cmd.x) / 2, (cmd.y1 + cmd.y) / 2))
+          break
+        case 'C':
+          points.push(
+            Vector.create(
+              (cmd.x1 + cmd.x2 + cmd.x) / 3,
+              (cmd.y1 + cmd.y2 + cmd.y) / 3
+            )
+          )
+          break
+        case 'Z':
+          if (points.length > 0) {
+            text.push(points)
+            points = []
+          }
+      }
+    }
   })
 
   World.add(
     engine.world,
-    fromVertices(380, 120, text, {
+    fromVertices(WIDTH / 2, HEIGHT / 2, text, {
       isStatic: true,
       render: {
         fillStyle: 'fafafa'
@@ -84,13 +112,29 @@ export async function renderAnimatedGif(token: string): Promise<void> {
       const day = weeks[i].contributionDays[j]
       if (day.contributionCount === 0) continue
 
-      const x = xOffset + i * 10 + (i - 1) * xMargin
-      const y = yOffset + j * 10 + (j - 1) * yMargin
-      const square = Bodies.rectangle(x, y, 10, 10, {
+      let density = 0
+      switch (day.contributionLevel) {
+        case 'FIRST_QUARTILE':
+          density = 4
+          break
+        case 'SECOND_QUARTILE':
+          density = 8
+          break
+        case 'THIRD_QUARTILE':
+          density = 12
+          break
+        case 'FOURTH_QUARTILE':
+          density = 16
+          break
+      }
+
+      const x = xOffset + i * boxSize + (i - 1) * xMargin
+      const y = yOffset + j * boxSize + (j - 1) * yMargin
+      const square = Bodies.rectangle(x, y, boxSize, boxSize, {
         render: {
           fillStyle: day.color
         },
-        density: 20
+        density: density
       })
 
       squares.push(square)
@@ -99,7 +143,7 @@ export async function renderAnimatedGif(token: string): Promise<void> {
 
   World.add(engine.world, squares)
 
-  const gif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', true, totalFrames)
+  const gif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false, totalFrames)
 
   gif.setFrameRate(60)
   gif.start()
@@ -115,6 +159,8 @@ export async function renderAnimatedGif(token: string): Promise<void> {
     canvas: img,
     engine: engine,
     options: {
+      width: WIDTH,
+      height: HEIGHT,
       wireframes: false,
       wireframeBackground: undefined,
       background: undefined
@@ -141,29 +187,4 @@ export async function renderAnimatedGif(token: string): Promise<void> {
 
   const buffer = gif.out.getData()
   fs.writeFileSync('a.gif', buffer)
-}
-
-function render(engine: Engine, context: CanvasRenderingContext2D) {
-  const bodies = Composite.allBodies(engine.world)
-
-  context.fillStyle = '#fff'
-  context.fillRect(0, 0, WIDTH, HEIGHT)
-
-  context.beginPath()
-
-  for (let i = 0; i < bodies.length; i += 1) {
-    const vertices = bodies[i].vertices
-
-    context.moveTo(vertices[0].x, vertices[0].y)
-
-    for (let j = 1; j < vertices.length; j += 1) {
-      context.lineTo(vertices[j].x, vertices[j].y)
-    }
-
-    context.lineTo(vertices[0].x, vertices[0].y)
-  }
-
-  context.lineWidth = 1
-  context.strokeStyle = 'rgba(255,255,255,0.2)'
-  context.stroke()
 }
