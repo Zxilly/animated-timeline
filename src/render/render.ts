@@ -1,8 +1,25 @@
 import {getCalendar} from '../github/calendar'
-import Matter, {Bodies, Composite, Engine, Svg, Vector, World} from 'matter-js'
-import TextToSVG, {GenerationOptions} from 'text-to-svg'
-import GIFEncoder from "gif-encoder-2";
-import { CanvasRenderingContext2D, createCanvas } from "canvas";
+import Matter, {
+  Bodies,
+  Common,
+  Composite,
+  Engine,
+  Render,
+  Vector,
+  World
+} from 'matter-js'
+import GIFEncoder from 'gif-encoder-2'
+import {CanvasRenderingContext2D, createCanvas} from 'canvas'
+import {load, parse} from 'opentype.js'
+import * as fs from 'fs'
+import {createHTMLWindow, createSVGWindow} from 'svgdom'
+import {SVG, registerWindow} from '@svgdotjs/svg.js'
+// @ts-ignore
+import polyfillSVG2 from '../utils/pathseg.js'
+// @ts-ignore
+import Svg from '../utils/svg.js'
+// @ts-ignore
+import fromVertices from '../utils/bodies.js'
 
 const WIDTH = 800
 const HEIGHT = 400
@@ -22,6 +39,9 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   const img = createCanvas(WIDTH, HEIGHT)
   const ctx = img.getContext('2d')
 
+  const font = parse(fs.readFileSync(`./font/NotoSerifSC-Regular.otf`).buffer)
+  console.log(font.getEnglishName('fontFamily'))
+
   const engine = Engine.create()
 
   const ground = Bodies.rectangle(400, 410, 810, 20, {isStatic: true})
@@ -29,14 +49,27 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   const right = Bodies.rectangle(810, 200, 20, 400, {isStatic: true})
   World.add(engine.world, [ground, left, right])
 
+  // Common.setDecomp(require('poly-decomp'))
 
-  const fonts: Vector[][] = []
+  const text: Array<Array<Vector>> = []
 
+  const svg = font.getPath("Zxilly", 0, 0, 72).toSVG(2)
 
+  const window = createHTMLWindow()
+  const document = window.document
+
+  registerWindow(window, document)
+  polyfillSVG2(window, window.document)
+
+  SVG(document.documentElement).svg(svg)
+
+  document.documentElement.querySelectorAll('path').forEach(path => {
+    text.push(Svg.pathToVertices(window, path, 30))
+  })
 
   World.add(
     engine.world,
-    Bodies.fromVertices(380, 120, fonts, {
+    fromVertices(380, 120, text, {
       isStatic: true,
       render: {
         fillStyle: 'fafafa'
@@ -49,6 +82,7 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   for (let i = 0; i < weeks.length; i++) {
     for (let j = 0; j < weeks[i].contributionDays.length; j++) {
       const day = weeks[i].contributionDays[j]
+      if (day.contributionCount === 0) continue
 
       const x = xOffset + i * 10 + (i - 1) * xMargin
       const y = yOffset + j * 10 + (j - 1) * yMargin
@@ -70,16 +104,41 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   gif.setFrameRate(60)
   gif.start()
 
+  // todo: remove debug output
+  // remove all in tmp
+  fs.readdirSync('./tmp').forEach(file => {
+    fs.unlinkSync(`./tmp/${file}`)
+  })
+
+  const render = Render.create({
+    // @ts-ignore
+    canvas: img,
+    engine: engine,
+    options: {
+      wireframes: false,
+      wireframeBackground: undefined,
+      background: undefined
+    }
+  })
+
   for (let i = 0; i < totalFrames; i++) {
     Engine.update(engine, 1000 / 60)
-    render(engine, ctx)
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, WIDTH, HEIGHT)
+
+    // @ts-ignore
+    Render.bodies(render, Composite.allBodies(engine.world), ctx)
+
+    const buffer = img.toBuffer('image/png')
+    fs.writeFileSync(`./tmp/${i}.png`, buffer)
+
     gif.addFrame(ctx)
+
+    console.log(`frame ${i} done`)
   }
 
   gif.finish()
 
-  // write to a.gif
-  const fs = require('fs')
   const buffer = gif.out.getData()
   fs.writeFileSync('a.gif', buffer)
 }
@@ -108,5 +167,3 @@ function render(engine: Engine, context: CanvasRenderingContext2D) {
   context.strokeStyle = 'rgba(255,255,255,0.2)'
   context.stroke()
 }
-
-

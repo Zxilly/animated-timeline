@@ -98,3 +98,6 @@ lib/**/*
 .idea
 
 .env.local
+
+tmp/
+a.gif

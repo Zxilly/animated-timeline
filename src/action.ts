@@ -1,5 +1,5 @@
-import * as core from '@actions/core'
 import { renderAnimatedGif } from "./render/render";
+import * as process from "process";
 
 async function run(): Promise<void> {
   // try {
@@ -8,7 +8,7 @@ async function run(): Promise<void> {
   //   if (error instanceof Error) core.setFailed(error.message)
   // }
 
-  await renderAnimatedGif("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")
+  await renderAnimatedGif(process.env.TOKEN!)
 }
 
 run()
