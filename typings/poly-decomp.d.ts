@@ -1,13 +1,13 @@
 declare module 'poly-decomp' {
-  type Polygon = Array<[number, number]>
+  type Polygon = [number, number][]
 
   export function isSimple(polygon: Polygon): boolean
 
   export function makeCCW(polygon: Polygon): boolean
 
-  export function quickDecomp(polygon: Polygon): Array<Polygon>
+  export function quickDecomp(polygon: Polygon): Polygon[]
 
-  export function decomp(polygon: Polygon): Array<Polygon>
+  export function decomp(polygon: Polygon): Polygon[]
 
   export function removeCollinearPoints(
     polygon: Polygon,

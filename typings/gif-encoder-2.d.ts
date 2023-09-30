@@ -25,11 +25,13 @@ declare module 'gif-encoder-2' {
      * @param useOptimizer enables/disables optimizer. `false` if undefined.
      * @param totalFrames total number of images. `0` if undefined.
      */
-    constructor(width: number,
-                height: number,
-                algorithm?: "neuquant" | "octree",
-                useOptimizer?: boolean,
-                totalFrames?: number)
+    constructor(
+      width: number,
+      height: number,
+      algorithm?: 'neuquant' | 'octree',
+      useOptimizer?: boolean,
+      totalFrames?: number
+    )
 
     /**
      * Starts the encoder.

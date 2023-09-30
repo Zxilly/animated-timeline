@@ -1,9 +1,9 @@
 import * as github from '@actions/github'
 import type {User} from '@octokit/graphql-schema'
-import {ContributionCalendarWeek} from '@octokit/graphql-schema/schema'
+import {ContributionCalendarWeek} from '@octokit/graphql-schema'
 
 // language=GraphQL
-const query: string = `
+const query = `
     {
         viewer {
             contributionsCollection {
@@ -25,7 +25,9 @@ const query: string = `
     }
 `
 
-export async function getCalendar(token: string):Promise<[string, Array<Pick<ContributionCalendarWeek, 'contributionDays'>>]> {
+export async function getCalendar(
+  token: string
+): Promise<[string, Pick<ContributionCalendarWeek, 'contributionDays'>[]]> {
   const octokit = github.getOctokit(token)
   const ret = await octokit.graphql<{viewer: User}>(query)
 
@@ -36,6 +38,6 @@ export async function getCalendar(token: string):Promise<[string, Array<Pick<Con
   const display = name ? name : login
   return [
     display,
-    weeks as Array<Pick<ContributionCalendarWeek, 'contributionDays'>>
+    weeks as Pick<ContributionCalendarWeek, 'contributionDays'>[]
   ]
 }

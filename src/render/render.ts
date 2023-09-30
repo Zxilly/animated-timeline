@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import {getCalendar} from '../github/calendar'
 import Matter, {
   Bodies,
+  Bounds,
   Common,
   Composite,
   Engine,
@@ -13,7 +16,10 @@ import {createCanvas} from 'canvas'
 import {parse} from 'opentype.js'
 import * as fs from 'fs'
 // @ts-ignore
-import fromVertices from '../utils/bodies.js'
+import fromVertices from '../utils/bodies'
+import polyDecomp from 'poly-decomp'
+import sharp from 'sharp'
+import * as core from '@actions/core'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -27,19 +33,32 @@ const boxSize = 15
 
 const totalFrames = 60 * PIC_TIME
 
-export async function renderAnimatedGif(token: string): Promise<void> {
-  const [name, weeks] = await getCalendar(token)
+interface renderOptions {
+  token: string
+  name?: string
+  output: string
+  type: 'webp' | 'gif'
+}
+
+export async function renderAnimatedGif(options: renderOptions): Promise<void> {
+  core.info('Fetching calendar data...')
+  const [githubName, weeks] = await getCalendar(options.token)
+  core.info('Calendar data fetched.')
+
+  let name = githubName
+  if (options.name) {
+    name = options.name
+  }
 
   const xOffset =
     WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
   const yOffset = -160
 
-  const img = createCanvas(WIDTH, HEIGHT)
-  console.log(img.width, img.height)
-  const ctx = img.getContext('2d')
-
   const font = parse(fs.readFileSync(`./font/NotoSerifSC-Regular.otf`).buffer)
-  console.log(font.getEnglishName('fontFamily'))
+
+  const img = createCanvas(WIDTH, HEIGHT)
+
+  const ctx = img.getContext('2d')
 
   const engine = Engine.create()
 
@@ -62,14 +81,16 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   )
   World.add(engine.world, [ground, left, right])
 
-  Common.setDecomp(require('poly-decomp'))
+  Common.setDecomp(polyDecomp)
 
-  const text: Array<Array<Vector>> = []
+  const text: Vector[][] = []
 
-  font.getPaths(name, WIDTH / 2, HEIGHT / 2, 144).forEach(path => {
+  const paths = font.getPaths(name, WIDTH / 2, HEIGHT / 2, 144)
+
+  for (const path of paths) {
     const cmds = path.commands
-    let points: Array<Vector> = []
-    for (let cmd of cmds) {
+    let points: Vector[] = []
+    for (const cmd of cmds) {
       switch (cmd.type) {
         case 'M':
         case 'L':
@@ -93,19 +114,25 @@ export async function renderAnimatedGif(token: string): Promise<void> {
           }
       }
     }
+  }
+
+  const textBodies = fromVertices(WIDTH / 2, HEIGHT / 2, text, {
+    isStatic: true,
+    render: {
+      fillStyle: 'white'
+    }
   })
 
-  World.add(
-    engine.world,
-    fromVertices(WIDTH / 2, HEIGHT / 2, text, {
-      isStatic: true,
-      render: {
-        fillStyle: 'fafafa'
-      }
-    })
-  )
+  const textComp = Composite.create({
+    bodies: textBodies
+  })
 
-  const squares: Array<Matter.Body> = []
+  // @ts-ignore
+  const textBound: Bounds = Composite.bounds(textComp)
+
+  World.add(engine.world, textComp)
+
+  const squares: Matter.Body[] = []
 
   for (let i = 0; i < weeks.length; i++) {
     for (let j = 0; j < weeks[i].contributionDays.length; j++) {
@@ -134,7 +161,7 @@ export async function renderAnimatedGif(token: string): Promise<void> {
         render: {
           fillStyle: day.color
         },
-        density: density
+        density
       })
 
       squares.push(square)
@@ -148,16 +175,10 @@ export async function renderAnimatedGif(token: string): Promise<void> {
   gif.setFrameRate(60)
   gif.start()
 
-  // todo: remove debug output
-  // remove all in tmp
-  fs.readdirSync('./tmp').forEach(file => {
-    fs.unlinkSync(`./tmp/${file}`)
-  })
-
   const render = Render.create({
     // @ts-ignore
     canvas: img,
-    engine: engine,
+    engine,
     options: {
       width: WIDTH,
       height: HEIGHT,
@@ -167,7 +188,23 @@ export async function renderAnimatedGif(token: string): Promise<void> {
     }
   })
 
+  const fontPathBound = font
+    .getPath(name, WIDTH / 2, HEIGHT / 2, 144)
+    .getBoundingBox()
+
+  const shapeCenterX = (textBound.max.x + textBound.min.x) / 2
+  const shapeCenterY = (textBound.max.y + textBound.min.y) / 2
+
+  const fontCenterX = (fontPathBound.x2 + fontPathBound.x1) / 2
+  const fontCenterY = (fontPathBound.y2 + fontPathBound.y1) / 2
+
+  core.info(`Rendering ${totalFrames} frames...`)
+
   for (let i = 0; i < totalFrames; i++) {
+    if ((i + 1) % 20 === 0) {
+      core.info(`Rendering ${i + 1} frames...`)
+    }
+
     Engine.update(engine, 1000 / 60)
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, WIDTH, HEIGHT)
@@ -175,16 +212,40 @@ export async function renderAnimatedGif(token: string): Promise<void> {
     // @ts-ignore
     Render.bodies(render, Composite.allBodies(engine.world), ctx)
 
-    const buffer = img.toBuffer('image/png')
-    fs.writeFileSync(`./tmp/${i}.png`, buffer)
+    font.draw(
+      // @ts-ignore
+      ctx,
+      name,
+      WIDTH / 2 - (fontCenterX - shapeCenterX),
+      HEIGHT / 2 - (fontCenterY - shapeCenterY),
+      144
+    )
 
     gif.addFrame(ctx)
-
-    console.log(`frame ${i} done`)
   }
 
   gif.finish()
 
+  core.info('Rendering finished.')
+  core.info('Writing to file...')
+
   const buffer = gif.out.getData()
-  fs.writeFileSync('a.gif', buffer)
+
+  const sharpInstance = sharp(buffer, {
+    animated: true
+  })
+  if (options.type === 'gif') {
+    sharpInstance.gif({
+      reuse: true,
+      delay: Math.floor(1000 / 60),
+      loop: 1
+    })
+  } else {
+    sharpInstance.webp({
+      delay: Math.floor(1000 / 60),
+      loop: 1
+    })
+  }
+  await sharpInstance.toFile(options.output)
+  core.info('File written.')
 }

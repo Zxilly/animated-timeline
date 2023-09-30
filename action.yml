@@ -1,11 +1,40 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Create timeline animation'
+description: 'Create animation from your github contributions timeline'
+author: 'Zxilly'
 inputs:
-  milliseconds: # change this
+  token:
+    description: 'Github token'
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    default: ${{ github.token }}
+  name:
+    description: 'Name displayed in the animation, by default it is the username of the token'
+    required: false
+  output:
+    description: 'Output file name'
+    required: false
+    default: 'animation.webp'
+  type:
+    description: 'Output file type, can be webp or gif'
+    required: false
+    default: 'webp'
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: 'Checkout'
+      uses: 'actions/checkout@v4'
+      with:
+        fetch-depth: 0
+
+    - name: 'Install dependencies'
+      shell: bash
+      run: 'pnpm install -P'
+
+    - name: 'Create animation'
+      shell: bash
+      run: 'pnpm run create'
+      env:
+        TOKEN: ${{ inputs.token }}
+        NAME: ${{ inputs.name }}
+        OUTPUT: ${{ inputs.output }}
+        TYPE: ${{ inputs.type }}
+

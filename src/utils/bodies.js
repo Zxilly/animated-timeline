@@ -1,4 +1,4 @@
-const { Common, Vertices, Body, Bounds } = require("matter-js");
+const { Common, Vertices, Body, Bounds, Vector } = require("matter-js");
 
 module.exports = function (
   x,
@@ -10,7 +10,7 @@ module.exports = function (
   minimumArea,
   removeDuplicatePoints
 ) {
-  var decomp = Common.getDecomp(),
+  let decomp = Common.getDecomp(),
     canDecomp,
     body,
     parts,
@@ -60,7 +60,7 @@ module.exports = function (
       })
     } else {
       // initialise a decomposition
-      var concave = vertices.map(function (vertex) {
+      const concave = vertices.map(function (vertex) {
         return [vertex.x, vertex.y]
       })
 
@@ -72,19 +72,19 @@ module.exports = function (
         decomp.removeDuplicatePoints(concave, removeDuplicatePoints)
 
       // use the quick decomposition algorithm (Bayazit)
-      var decomposed = decomp.quickDecomp(concave)
+      const decomposed = decomp.quickDecomp(concave)
 
       // for each decomposed chunk
       for (i = 0; i < decomposed.length; i++) {
-        var chunk = decomposed[i]
+        const chunk = decomposed[i];
 
         // convert vertices into the correct structure
-        var chunkVertices = chunk.map(function (vertices) {
+        const chunkVertices = chunk.map(function(vertices) {
           return {
             x: vertices[0],
             y: vertices[1]
-          }
-        })
+          };
+        });
 
         // skip small chunks
         if (minimumArea > 0 && Vertices.area(chunkVertices) < minimumArea)
@@ -106,23 +106,23 @@ module.exports = function (
 
   // flag internal edges (coincident part edges)
   if (flagInternal) {
-    var coincident_max_dist = 5
+    const coincident_max_dist = 5
 
     for (i = 0; i < parts.length; i++) {
-      var partA = parts[i]
+      const partA = parts[i]
 
       for (j = i + 1; j < parts.length; j++) {
-        var partB = parts[j]
+        const partB = parts[j]
 
         if (Bounds.overlaps(partA.bounds, partB.bounds)) {
-          var pav = partA.vertices,
+          const pav = partA.vertices,
             pbv = partB.vertices
 
           // iterate vertices of both parts
           for (k = 0; k < partA.vertices.length; k++) {
             for (z = 0; z < partB.vertices.length; z++) {
               // find distances between the vertices
-              var da = Vector.magnitudeSquared(
+              const da = Vector.magnitudeSquared(
                   Vector.sub(pav[(k + 1) % pav.length], pbv[z])
                 ),
                 db = Vector.magnitudeSquared(

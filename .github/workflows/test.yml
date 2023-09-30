@@ -4,19 +4,19 @@ on:
   push:
     branches:
       - main
-      - 'releases/*'
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          npm install
-      - run: |
-          npm run all
-  test: # make sure the action works on a clean machine without building
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: 'Zxilly'
+          output: 'animation.webp'
+          type: 'webp'
+      - uses: actions/upload-artifact@v3
+        with:
+          name: animation
+          path: animation.webp
