@@ -25,6 +25,9 @@ runs:
       with:
         fetch-depth: 0
 
+    - name: 'Install pnpm'
+      uses: pnpm/action-setup@v2
+
     - name: 'Install dependencies'
       shell: bash
       run: 'pnpm install -P'
