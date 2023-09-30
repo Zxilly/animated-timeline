@@ -10,14 +10,23 @@ async function run(): Promise<void> {
   }
 
   const name = process.env['NAME'] === '' ? undefined : process.env['NAME']
+  const token = process.env['TOKEN']
+  if (!token) {
+    core.setFailed('Invalid token')
+    return
+  }
+
+  const output = process.env['OUTPUT']
+  if (!output) {
+    core.setFailed('Invalid output')
+    return
+  }
 
   await renderAnimatedGif({
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    token: process.env['TOKEN']!,
+    token,
     type,
     name,
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    output: process.env['OUTPUT']!
+    output
   })
 }
 
