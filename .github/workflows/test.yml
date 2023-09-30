@@ -1,9 +1,7 @@
-name: 'build-test'
+name: Build Test
 on:
   pull_request:
   push:
-    branches:
-      - main
 
 jobs:
   test:
