@@ -35,6 +35,7 @@ runs:
       shell: bash
       run: 'pnpm run create'
       env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NAME: ${{ inputs.name }}
         OUTPUT: ${{ inputs.output }}
         TYPE: ${{ inputs.type }}
