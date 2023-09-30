@@ -5,7 +5,7 @@ inputs:
   token:
     description: 'Github token'
     required: true
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
   name:
     description: 'Name displayed in the animation, by default it is the username of the token'
     required: false
