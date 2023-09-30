@@ -4,7 +4,7 @@ import {ContributionCalendarWeek} from '@octokit/graphql-schema'
 
 // language=GraphQL
 const query = `
-    {
+    query {
         viewer {
             contributionsCollection {
                 contributionCalendar {

@@ -10,11 +10,8 @@ async function run(): Promise<void> {
   }
 
   const name = process.env['NAME'] === '' ? undefined : process.env['NAME']
-  const token = process.env['TOKEN']
-  if (!token) {
-    core.setFailed('Invalid token')
-    return
-  }
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const token = process.env['GITHUB_TOKEN']!
 
   const output = process.env['OUTPUT']
   if (!output) {

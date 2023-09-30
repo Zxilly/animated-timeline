@@ -202,7 +202,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   for (let i = 0; i < totalFrames; i++) {
     if ((i + 1) % 20 === 0) {
-      core.info(`Rendering ${i + 1} frames...`)
+      core.info(`Rendered ${i + 1} frames.`)
     }
 
     Engine.update(engine, 1000 / 60)
@@ -226,7 +226,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   gif.finish()
 
-  core.info('Rendering finished.')
+  core.info('Render finished.')
   core.info('Writing to file...')
 
   const buffer = gif.out.getData()

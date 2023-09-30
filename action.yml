@@ -2,10 +2,6 @@ name: 'Create timeline animation'
 description: 'Create animation from your github contributions timeline'
 author: 'Zxilly'
 inputs:
-  token:
-    description: 'Github token'
-    required: true
-    default: ${{ github.token }}
   name:
     description: 'Name displayed in the animation, by default it is the username of the token'
     required: false
@@ -39,7 +35,6 @@ runs:
       shell: bash
       run: 'pnpm run create'
       env:
-        TOKEN: ${{ inputs.token }}
         NAME: ${{ inputs.name }}
         OUTPUT: ${{ inputs.output }}
         TYPE: ${{ inputs.type }}
