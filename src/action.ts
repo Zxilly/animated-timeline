@@ -17,7 +17,7 @@ async function run(): Promise<void> {
     return
   }
 
-  const output = process.env['OUTPUT']
+  const output = core.getInput('output')
   if (!output) {
     core.setFailed('Invalid output')
     return
