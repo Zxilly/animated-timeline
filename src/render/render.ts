@@ -23,6 +23,7 @@ import * as core from '@actions/core'
 import * as path from 'path'
 // @ts-ignore
 import fontBin from '../../font/NotoSerifSC-Regular.otf'
+import {execFileSync} from 'child_process'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -230,28 +231,51 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   gif.finish()
 
   core.info('Render finished.')
-  core.info('Writing to file...')
+  core.info('Reducing output size...')
 
   const buffer = gif.out.getData()
 
-  const sharpInstance = sharp(buffer, {
-    animated: true
-  })
-  if (options.type === 'gif') {
-    sharpInstance.gif({
-      reuse: true,
-      delay: Math.floor(1000 / 60),
-      loop: 1
-    })
-  } else {
-    sharpInstance.webp({
-      delay: Math.floor(1000 / 60),
-      loop: 1
-    })
-  }
   // create the folder
   fs.mkdirSync(path.dirname(options.output), {recursive: true})
 
-  await sharpInstance.toFile(options.output)
+  if (options.type === 'webp') {
+    await sharp(buffer, {
+      animated: true
+    })
+      .webp({
+        delay: Math.floor(1000 / 60),
+        loop: 1,
+        quality: 60,
+        nearLossless: true,
+        effort: 6,
+        // @ts-ignore
+        minSize: true,
+        alphaQuality: 0,
+        mixed: true
+      })
+      .toFile(options.output)
+  } else {
+    fs.writeFileSync(options.output, buffer)
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const gifsiclePath = await new Promise<string>(resolve => {
+      eval(`
+        import("gifsicle").then((gifsicle) => {
+          resolve(gifsicle.default);
+        });
+      `)
+    })
+    core.debug(`gifsicle path: ${gifsiclePath}`)
+
+    execFileSync(gifsiclePath, [
+      '--optimize=2',
+      '--colors',
+      '16',
+      '--no-loopcount',
+      '--batch',
+      options.output
+    ])
+  }
+
   core.info('File written.')
 }
