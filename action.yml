@@ -15,4 +15,4 @@ inputs:
     default: 'webp'
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/Zxilly/animatedtimeline:master'
+  image: 'docker://ghcr.io/zxilly/animatedtimeline:master'
