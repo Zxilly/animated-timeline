@@ -2,6 +2,11 @@ name: Build Docker Image
 on:
   push:
 
+permissions:
+  actions: write
+  packages: write
+  contents: read
+
 jobs:
   docker:
     runs-on: ubuntu-latest
