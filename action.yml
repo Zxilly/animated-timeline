@@ -1,6 +1,9 @@
 name: 'Create timeline animation'
 description: 'Create animation from your github contributions timeline'
 author: 'Zxilly'
+branding:
+  icon: 'aperture'
+  color: 'blue'
 inputs:
   name:
     description: 'Name displayed in the animation, by default it is the username of the token'
