@@ -1,6 +1,7 @@
 import {renderAnimatedGif} from './render/render'
 import * as core from '@actions/core'
 import * as process from 'process'
+import 'source-map-support/register'
 
 async function run(): Promise<void> {
   const type = core.getInput('type')
