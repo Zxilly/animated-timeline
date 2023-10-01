@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import {getCalendar} from '../github/calendar'
+import { getCalendar } from '../github/calendar'
 import Matter, {
   Bodies,
   Bounds,
@@ -12,8 +12,8 @@ import Matter, {
   World
 } from 'matter-js'
 import GIFEncoder from 'gif-encoder-2'
-import {createCanvas} from 'canvas'
-import {parse} from 'opentype.js'
+import { createCanvas } from 'canvas'
+import { parse } from 'opentype.js'
 import * as fs from 'fs'
 // @ts-ignore
 import fromVertices from '../utils/bodies'
@@ -23,7 +23,7 @@ import * as core from '@actions/core'
 import * as path from 'path'
 // @ts-ignore
 import fontBin from '../../font/NotoSerifSC-Regular.otf'
-import {execFileSync} from 'child_process'
+import { execFileSync } from 'child_process'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -71,17 +71,30 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     HEIGHT + boxSize,
     WIDTH + boxSize,
     boxSize * 2,
-    {isStatic: true}
+    {
+      isStatic: true,
+      render: {
+        fillStyle: 'white'
+      }
+    }
   )
   const left = Bodies.rectangle(-boxSize, HEIGHT / 2, boxSize * 2, HEIGHT, {
-    isStatic: true
+    isStatic: true,
+    render: {
+      fillStyle: 'white'
+    }
   })
   const right = Bodies.rectangle(
     WIDTH + boxSize,
     HEIGHT / 2,
     boxSize * 2,
     HEIGHT,
-    {isStatic: true}
+    {
+      isStatic: true,
+      render: {
+        fillStyle: 'white'
+      },
+    }
   )
   World.add(engine.world, [ground, left, right])
 
@@ -236,7 +249,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   const buffer = gif.out.getData()
 
   // create the folder
-  fs.mkdirSync(path.dirname(options.output), {recursive: true})
+  fs.mkdirSync(path.dirname(options.output), { recursive: true })
 
   if (options.type === 'webp') {
     await sharp(buffer, {
