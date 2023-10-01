@@ -20,6 +20,7 @@ import fromVertices from '../utils/bodies'
 import polyDecomp from 'poly-decomp'
 import sharp from 'sharp'
 import * as core from '@actions/core'
+import * as path from 'path'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -248,6 +249,9 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       loop: 1
     })
   }
+  // create the folder
+  fs.mkdirSync(path.dirname(options.output), {recursive: true})
+
   await sharpInstance.toFile(options.output)
   core.info('File written.')
 }
