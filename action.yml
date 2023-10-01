@@ -2,9 +2,6 @@ name: 'Create timeline animation'
 description: 'Create animation from your github contributions timeline'
 author: 'Zxilly'
 inputs:
-  token:
-    description: 'Github token'
-    required: true
   name:
     description: 'Name displayed in the animation, by default it is the username of the token'
     required: false
@@ -17,29 +14,5 @@ inputs:
     required: false
     default: 'webp'
 runs:
-  using: 'composite'
-  steps:
-    - name: 'Checkout'
-      uses: 'actions/checkout@v4'
-      with:
-        fetch-depth: 0
-
-    - name: 'Install pnpm'
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-
-    - name: 'Install dependencies'
-      shell: bash
-      run: |
-        pnpm install
-
-    - name: 'Create animation'
-      shell: bash
-      run: 'pnpm run create'
-      env:
-        GITHUB_TOKEN: ${{ inputs.token }}
-        NAME: ${{ inputs.name }}
-        OUTPUT: ${{ inputs.output }}
-        TYPE: ${{ inputs.type }}
-
+  using: 'docker'
+  image: 'docker://ghcr.io/Zxilly/animatedTimeline:master'

@@ -3,15 +3,19 @@ import * as core from '@actions/core'
 import * as process from 'process'
 
 async function run(): Promise<void> {
-  const type = process.env['TYPE']
+  const type = core.getInput('type')
   if (type !== 'webp' && type !== 'gif') {
     core.setFailed('Invalid type')
     return
   }
 
-  const name = process.env['NAME'] === '' ? undefined : process.env['NAME']
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const token = process.env['GITHUB_TOKEN']!
+  const name = core.getInput('name') === '' ? undefined : core.getInput('name')
+
+  const token = process.env['GITHUB_TOKEN']
+  if (!token) {
+    core.setFailed('Token must be provided as environment variable')
+    return
+  }
 
   const output = process.env['OUTPUT']
   if (!output) {

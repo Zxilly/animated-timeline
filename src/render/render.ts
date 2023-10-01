@@ -54,7 +54,9 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
   const yOffset = -160
 
-  const font = parse(fs.readFileSync(`./font/NotoSerifSC-Regular.otf`).buffer)
+  const font = parse(
+    fs.readFileSync(`${__dirname}//font/NotoSerifSC-Regular.otf`).buffer
+  )
 
   const img = createCanvas(WIDTH, HEIGHT)
 
