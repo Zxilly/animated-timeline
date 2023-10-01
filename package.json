@@ -5,7 +5,7 @@
   "description": "GitHub action to create an animated timeline from contributions",
   "main": "src/action.ts",
   "scripts": {
-    "build": "esbuild src/action.ts --sourcemap=inline --platform=node --bundle --external:canvas --external:sharp --loader:.otf=binary --target=node20 --outfile=dist/index.js",
+    "build": "esbuild src/action.ts --sourcemap=inline --minify --platform=node --bundle --external:canvas --external:sharp --loader:.otf=binary --target=node20 --outfile=dist/index.js",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
