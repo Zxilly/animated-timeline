@@ -6,7 +6,7 @@ COPY . /app
 WORKDIR /app
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod
 
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
@@ -14,5 +14,5 @@ RUN pnpm run build
 
 FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/lib /app/lib
-CMD [ "node", "/app/lib/action.js" ]
+COPY --from=build /app/dist /app/dist
+CMD [ "node", "/app/dist/index.js" ]
