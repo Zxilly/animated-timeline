@@ -1,0 +1,28 @@
+name: Build Docker Image
+on:
+  workflow_dispatch:
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    needs: [ docker ]
+    steps:
+      - name: Clean outdated image
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          script: |
+            const response = await github.request("GET /user/packages/container/${{ env.PACKAGE_NAME }}/versions",
+              { per_page: ${{ env.PER_PAGE }}
+            });
+            for(version of response.data) {
+                if (version.metadata.container.tags.length == 0) {
+                    console.log("delete " + version.id)
+                    const deleteResponse = await github.request("DELETE /user/packages/container/${{ env.PACKAGE_NAME }}/versions/" + version.id, { });
+                    console.log("status " + deleteResponse.status)
+                }
+            }
+        env:
+          OWNER: Zxilly
+          PACKAGE_NAME: animatedtimeline
+          PER_PAGE: 100
