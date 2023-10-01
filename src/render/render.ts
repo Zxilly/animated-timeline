@@ -21,6 +21,8 @@ import polyDecomp from 'poly-decomp'
 import sharp from 'sharp'
 import * as core from '@actions/core'
 import * as path from 'path'
+// @ts-ignore
+import fontBin from '../../font/NotoSerifSC-Regular.otf'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -55,9 +57,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
   const yOffset = -160
 
-  const font = parse(
-    fs.readFileSync(`${__dirname}//font/NotoSerifSC-Regular.otf`).buffer
-  )
+  const font = parse(fontBin.buffer)
 
   const img = createCanvas(WIDTH, HEIGHT)
 
@@ -90,8 +90,8 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   const paths = font.getPaths(name, WIDTH / 2, HEIGHT / 2, 144)
 
-  for (const path of paths) {
-    const cmds = path.commands
+  for (const pa of paths) {
+    const cmds = pa.commands
     let points: Vector[] = []
     for (const cmd of cmds) {
       switch (cmd.type) {
