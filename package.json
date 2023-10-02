@@ -47,6 +47,6 @@
   "dependencies": {
     "canvas": "^2.11.2",
     "gifsicle": "^7.0.1",
-    "sharp": "0.32.3"
+    "sharp": "0.32.6"
   }
 }
