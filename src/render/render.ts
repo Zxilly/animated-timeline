@@ -281,10 +281,11 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     core.debug(`gifsicle path: ${gifsiclePath}`)
 
     execFileSync(gifsiclePath, [
-      '--optimize=2',
+      '--optimize=3',
       '--colors',
       '16',
       '--no-loopcount',
+      ''
       '--batch',
       '--interlace',
       options.output
