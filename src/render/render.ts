@@ -286,6 +286,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       '16',
       '--no-loopcount',
       '--batch',
+      '--interlace',
       options.output
     ])
   }
