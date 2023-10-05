@@ -22,7 +22,7 @@
     "@actions/core": "^1.10.1",
     "@actions/github": "^5.1.1",
     "@jest/globals": "^29.7.0",
-    "@octokit/graphql-schema": "^14.33.0",
+    "@octokit/graphql-schema": "^14.33.1",
     "@types/gifsicle": "^5.2.0",
     "@types/jest": "^29.5.5",
     "@types/matter-js": "^0.19.1",
