@@ -176,7 +176,10 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       const y = yOffset + j * boxSize + (j - 1) * yMargin
       const square = Bodies.rectangle(x, y, boxSize, boxSize, {
         render: {
-          fillStyle: day.color
+          fillStyle: day.color,
+        },
+        chamfer: {
+          radius: 3
         },
         density
       })
