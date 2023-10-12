@@ -26,8 +26,8 @@ devDependencies:
     specifier: ^29.7.0
     version: 29.7.0
   '@octokit/graphql-schema':
-    specifier: ^14.35.0
-    version: 14.35.0
+    specifier: ^14.37.0
+    version: 14.37.0
   '@types/gifsicle':
     specifier: ^5.2.0
     version: 5.2.0
@@ -1107,8 +1107,8 @@ packages:
       universal-user-agent: 6.0.0
     dev: true
 
-  /@octokit/graphql-schema@14.35.0:
-    resolution: {integrity: sha512-d2ZELiZzC2eW+c0TvXeoNAjq9CcnbuSBd9BckArmEeuWjf+61a/KU/OKezB7vKz2ixxcIwsRG+PnQLtQnYH26Q==}
+  /@octokit/graphql-schema@14.37.0:
+    resolution: {integrity: sha512-rBohiXKzhhpEyfBdK5tE9FdljjFVGyUqs5NkoM9HaaHr3FdlYekzCI6ywq8WjfC7UUZcPVxVEWTh+Hee5ExNag==}
     dependencies:
       graphql: 16.8.1
       graphql-tag: 2.12.6(graphql@16.8.1)
