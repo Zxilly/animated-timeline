@@ -24,7 +24,7 @@ async function run(): Promise<void> {
     return
   }
 
-  if (!name.endsWith(`.${type}`)) {
+  if (name && !name.endsWith(`.${type}`)) {
     core.warning(`Output filename not met type.\nname: ${name}\ntype: ${type}`)
   }
 
