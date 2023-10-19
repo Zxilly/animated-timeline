@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^20.8.7
     version: 20.8.7
   '@types/opentype.js':
-    specifier: ^1.3.6
-    version: 1.3.6
+    specifier: ^1.3.7
+    version: 1.3.7
   '@typescript-eslint/parser':
     specifier: ^6.8.0
     version: 6.8.0(eslint@8.51.0)(typescript@5.2.2)
@@ -1386,8 +1386,8 @@ packages:
     dependencies:
       undici-types: 5.25.3
 
-  /@types/opentype.js@1.3.6:
-    resolution: {integrity: sha512-dUWq16/odeIvR/HCNZT+6BQ1x/hQKxkmdkq992TNfpx1b1onwqJEeHlKW+TrJgYiPDNv9J5qHdYlfZPfcbaGsA==}
+  /@types/opentype.js@1.3.7:
+    resolution: {integrity: sha512-Rm9MY99SKAYmgqOAi8oG984WEb0ej56MBP3C1IYqthqhSG68IgDqWn4kH/e8KZvGqW4r1LR35bkmVN1qTpgc/A==}
     dev: true
 
   /@types/responselike@1.0.1:
