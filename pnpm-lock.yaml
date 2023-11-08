@@ -35,8 +35,8 @@ devDependencies:
     specifier: ^29.5.7
     version: 29.5.7
   '@types/matter-js':
-    specifier: ^0.19.3
-    version: 0.19.3
+    specifier: ^0.19.4
+    version: 0.19.4
   '@types/node':
     specifier: ^20.8.10
     version: 20.8.10
@@ -1326,8 +1326,8 @@ packages:
       '@types/node': 20.8.10
     dev: false
 
-  /@types/matter-js@0.19.3:
-    resolution: {integrity: sha512-LNE65HED0sPmwvTDGjDrYdiP2O631/PPkLu85iDZnjy0qXG1dk3gi6A+ymxwpVJUcQONyQj2ywOo4sS2NUEizQ==}
+  /@types/matter-js@0.19.4:
+    resolution: {integrity: sha512-CHKobJ2Kr9GJqr1uvoL4v3DCCgf44b0qJcOctbHtkmPBDMMN0ORnIwNS0WNFxiD0YqtySZH7IgaefGFZ0NUcMA==}
     dev: true
 
   /@types/node@20.8.10:
