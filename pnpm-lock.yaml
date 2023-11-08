@@ -29,8 +29,8 @@ devDependencies:
     specifier: ^14.40.1
     version: 14.40.1
   '@types/gifsicle':
-    specifier: ^5.2.1
-    version: 5.2.1
+    specifier: ^5.2.2
+    version: 5.2.2
   '@types/jest':
     specifier: ^29.5.7
     version: 29.5.7
@@ -1279,8 +1279,8 @@ packages:
       '@babel/types': 7.21.5
     dev: true
 
-  /@types/gifsicle@5.2.1:
-    resolution: {integrity: sha512-aprk0YlqPDsTeGabGhB4HN9aTtd8DiivKTgozmnxXCAWz3FnvsryBFLtsJlp4YvcFCFrEfbRER+uW1TX0OSrhA==}
+  /@types/gifsicle@5.2.2:
+    resolution: {integrity: sha512-lluDxP9Ik6ldUqO385TRTIHCrwmrhj85eruRit3vUkkOReRPb5r4TRVTTZhfvfuw416q7Q/TAMP3G5sQ7VUamg==}
     dev: true
 
   /@types/graceful-fs@4.1.6:
