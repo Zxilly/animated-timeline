@@ -6,7 +6,7 @@
   "type": "commonjs",
   "main": "src/action.ts",
   "scripts": {
-    "build": "esbuild src/action.ts --sourcemap=inline --platform=node --bundle --external:canvas --external:sharp --loader:.otf=binary --target=node20 --outfile=dist/index.js",
+    "build": "esbuild src/action.ts --sourcemap=inline --platform=node --bundle --external:canvas --loader:.otf=binary --target=node20 --outfile=dist/index.js",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
@@ -45,8 +45,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "canvas": "^2.11.2",
-    "gifsicle": "^7.0.1",
-    "sharp": "0.32.6"
+    "canvas": "^2.11.2"
   }
 }

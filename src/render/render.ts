@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { getCalendar } from '../github/calendar'
+import {getCalendar} from '../github/calendar'
 import Matter, {
   Bodies,
   Bounds,
@@ -12,36 +12,102 @@ import Matter, {
   World
 } from 'matter-js'
 import GIFEncoder from 'gif-encoder-2'
-import { createCanvas } from 'canvas'
-import { parse } from 'opentype.js'
+import {createCanvas} from 'canvas'
+import {parse} from 'opentype.js'
 import * as fs from 'fs'
 // @ts-ignore
 import fromVertices from '../utils/bodies'
 import polyDecomp from 'poly-decomp'
-import sharp from 'sharp'
 import * as core from '@actions/core'
 import * as path from 'path'
 // @ts-ignore
 import fontBin from '../../font/NotoSerifSC-Regular.otf'
-import { execFileSync } from 'child_process'
+import {execFileSync} from 'child_process'
+import * as process from 'process'
 
 const WIDTH = 1200
 const HEIGHT = 500
 
-const PIC_TIME = 6
+const MAX_PIC_TIME = 12
 
 const xMargin = 4
 const yMargin = 4
 
 const boxSize = 15
 
-const totalFrames = 60 * PIC_TIME
+const FRAME_RATE = 60
+const maxTotalFrames = FRAME_RATE * MAX_PIC_TIME
+
+const speedLimit = 0.1
+const angularSpeedLimit = 0.05
+
+const debug = process.env.DEBUG !== undefined
 
 interface renderOptions {
   token: string
   name?: string
   output: string
   type: 'webp' | 'gif'
+}
+
+const lastSecondMaxSpeed: number[] = []
+
+function isWorldStopped(world: Matter.World): boolean {
+  const [max, maxAngular] = maxWorldSpeed(world)
+  lastSecondMaxSpeed.push(max)
+  if (lastSecondMaxSpeed.length > FRAME_RATE) {
+    lastSecondMaxSpeed.shift()
+  }
+  const avgSpeed =
+    lastSecondMaxSpeed.reduce((acc, cur) => acc + cur, 0) /
+    lastSecondMaxSpeed.length
+  return (
+    avgSpeed < speedLimit ||
+    (maxAngular < angularSpeedLimit && avgSpeed < speedLimit * 2)
+  )
+}
+
+function maxWorldSpeed(world: Matter.World): [number, number] {
+  let maxSpeed = 0
+  let maxAngularSpeed = 0
+  for (const body of world.bodies) {
+    if (body.isStatic) continue
+    if (body.speed > maxSpeed) maxSpeed = body.speed
+    if (body.angularSpeed > maxAngularSpeed) maxAngularSpeed = body.angularSpeed
+  }
+  return [maxSpeed, maxAngularSpeed]
+}
+
+async function encodeWebp(buf: Buffer, output: string): Promise<void> {
+  const tmpDir = fs.mkdtempSync('animated-')
+  const gif = path.join(tmpDir, 'animated.gif')
+
+  fs.writeFileSync(gif, buf)
+
+  execFileSync('gif2webp', [
+    gif,
+    '--quiet',
+    '--mixed',
+    '--min_size',
+    '-q',
+    '100',
+    '-o',
+    output
+  ])
+}
+
+async function encodeGif(buf: Buffer, output: string): Promise<void> {
+  fs.writeFileSync(output, buf)
+
+  execFileSync('gifsicle', [
+    '--optimize=3',
+    '--colors',
+    '16',
+    '--no-loopcount',
+    '--batch',
+    '--interlace',
+    output
+  ])
 }
 
 export async function renderAnimatedGif(options: renderOptions): Promise<void> {
@@ -93,7 +159,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       isStatic: true,
       render: {
         fillStyle: 'white'
-      },
+      }
     }
   )
   World.add(engine.world, [ground, left, right])
@@ -176,7 +242,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       const y = yOffset + j * boxSize + (j - 1) * yMargin
       const square = Bodies.rectangle(x, y, boxSize, boxSize, {
         render: {
-          fillStyle: day.color,
+          fillStyle: day.color
         },
         chamfer: {
           radius: 3
@@ -190,9 +256,9 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   World.add(engine.world, squares)
 
-  const gif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false, totalFrames)
+  const gif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false, maxTotalFrames)
 
-  gif.setFrameRate(60)
+  gif.setFrameRate(FRAME_RATE)
   gif.start()
 
   const render = Render.create({
@@ -218,14 +284,14 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   const fontCenterX = (fontPathBound.x2 + fontPathBound.x1) / 2
   const fontCenterY = (fontPathBound.y2 + fontPathBound.y1) / 2
 
-  core.info(`Rendering ${totalFrames} frames...`)
+  core.info(`Rendering max ${maxTotalFrames} frames...`)
 
-  for (let i = 0; i < totalFrames; i++) {
+  for (let i = 0; i < maxTotalFrames; i++) {
     if ((i + 1) % 20 === 0) {
       core.info(`Rendered ${i + 1} frames.`)
     }
 
-    Engine.update(engine, 1000 / 60)
+    Engine.update(engine, 1000 / FRAME_RATE)
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
@@ -241,58 +307,64 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       144
     )
 
+    if (debug) {
+      font.draw(
+        // @ts-ignore
+        ctx,
+        `frame: ${i + 1}`,
+        10,
+        10,
+        12
+      )
+
+      const [speed, angularSpeed] = maxWorldSpeed(engine.world)
+
+      font.draw(
+        // @ts-ignore
+        ctx,
+        `speed: ${speed.toFixed(3)}`,
+        10,
+        30,
+        12
+      )
+
+      font.draw(
+        // @ts-ignore
+        ctx,
+        `angular speed: ${angularSpeed.toFixed(3)}`,
+        10,
+        50,
+        12
+      )
+    }
+
     gif.addFrame(ctx)
+
+    if (i > 30 && isWorldStopped(engine.world)) {
+      core.info(`World stopped at frame ${i + 1}. Stopping render.`)
+      break
+    }
   }
 
   gif.finish()
 
   core.info('Render finished.')
-  core.info('Reducing output size...')
+  core.info('Encoding...')
 
   const buffer = gif.out.getData()
 
   // create the folder
-  fs.mkdirSync(path.dirname(options.output), { recursive: true })
+  fs.mkdirSync(path.dirname(options.output), {recursive: true})
+  fs.writeFileSync(options.output, buffer)
 
-  if (options.type === 'webp') {
-    await sharp(buffer, {
-      animated: true
-    })
-      .webp({
-        delay: Math.floor(1000 / 60),
-        loop: 1,
-        quality: 60,
-        nearLossless: true,
-        effort: 6,
-        // @ts-ignore
-        minSize: true,
-        alphaQuality: 0,
-        mixed: true
-      })
-      .toFile(options.output)
-  } else {
-    fs.writeFileSync(options.output, buffer)
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const gifsiclePath = await new Promise<string>(resolve => {
-      eval(`
-        import("gifsicle").then((gifsicle) => {
-          resolve(gifsicle.default);
-        });
-      `)
-    })
-    core.debug(`gifsicle path: ${gifsiclePath}`)
-
-    execFileSync(gifsiclePath, [
-      '--optimize=3',
-      '--colors',
-      '16',
-      '--no-loopcount',
-      '--batch',
-      '--interlace',
-      options.output
-    ])
+  switch (options.type) {
+    case 'gif':
+      await encodeGif(buffer, options.output)
+      break
+    case 'webp':
+      await encodeWebp(buffer, options.output)
+      break
   }
 
-  core.info('File written.')
+  core.info('Encoded file written.')
 }

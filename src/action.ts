@@ -6,11 +6,12 @@ import 'source-map-support/register'
 async function run(): Promise<void> {
   const type = core.getInput('type')
   if (type !== 'webp' && type !== 'gif') {
-    core.setFailed('Invalid type')
+    core.setFailed('Invalid type, must be webp or gif')
     return
   }
 
-  const name = core.getInput('name') === '' ? undefined : core.getInput('name')
+  const name: string | null =
+    core.getInput('name') === '' ? null : core.getInput('name')
 
   const token = process.env['GITHUB_TOKEN']
   if (!token) {
