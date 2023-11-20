@@ -43,6 +43,13 @@ const angularSpeedLimit = 0.05
 
 const debug = process.env.DEBUG !== undefined
 
+const tmpGif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false)
+tmpGif.setFrameRate(FRAME_RATE)
+tmpGif.setRepeat(1)
+
+const webpTempDir = fs.mkdtempSync('webp-')
+let webpFrameIndex = 0
+
 interface renderOptions {
   token: string
   name?: string
@@ -78,25 +85,34 @@ function maxWorldSpeed(world: Matter.World): [number, number] {
   return [maxSpeed, maxAngularSpeed]
 }
 
-async function encodeWebp(buf: Buffer, output: string): Promise<void> {
-  const tmpDir = fs.mkdtempSync('animated-')
-  const gif = path.join(tmpDir, 'animated.gif')
+async function encodeWebp(output: string): Promise<void> {
+  const files = []
+  for (let i = 0; i < webpFrameIndex; i++) {
+    files.push(path.join(webpTempDir, `${i}.png`))
+  }
 
-  fs.writeFileSync(gif, buf)
-
-  execFileSync('gif2webp', [
-    gif,
-    '-quiet',
+  execFileSync('img2webp', [
     '-mixed',
     '-min_size',
     '-q',
-    '0',
+    '60',
+    '-d',
+    `${Math.floor(1000 / FRAME_RATE)}`,
+    '-loop',
+    '1',
+    ...files,
     '-o',
     output
   ])
+
+  fs.rmSync(webpTempDir, {recursive: true, force: true})
 }
 
 async function encodeGif(buf: Buffer, output: string): Promise<void> {
+  if (debug) {
+    fs.writeFileSync('debug.gif', buf)
+  }
+
   fs.writeFileSync(output, buf)
 
   execFileSync('gifsicle', [
@@ -256,11 +272,6 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   World.add(engine.world, squares)
 
-  const gif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false, maxTotalFrames)
-
-  gif.setFrameRate(FRAME_RATE)
-  gif.start()
-
   const render = Render.create({
     // @ts-ignore
     canvas: img,
@@ -285,6 +296,10 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   const fontCenterY = (fontPathBound.y2 + fontPathBound.y1) / 2
 
   core.info(`Rendering max ${maxTotalFrames} frames...`)
+
+  if (options.type === 'gif') {
+    tmpGif.start()
+  }
 
   for (let i = 0; i < maxTotalFrames; i++) {
     if ((i + 1) % 20 === 0) {
@@ -338,31 +353,37 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       )
     }
 
-    gif.addFrame(ctx)
+    if (options.type === 'gif') {
+      tmpGif.addFrame(ctx)
+    } else {
+      const current = ctx.canvas.toBuffer('image/png')
+      const currentPath = path.join(webpTempDir, `${i}.png`)
+      fs.writeFileSync(currentPath, current)
+      webpFrameIndex = i
+    }
 
     if (i > 30 && isWorldStopped(engine.world)) {
       core.info(`World stopped at frame ${i + 1}. Stopping render.`)
+      if (options.type === 'gif') {
+        tmpGif.finish()
+      }
+
       break
     }
   }
 
-  gif.finish()
-
   core.info('Render finished.')
   core.info('Encoding...')
 
-  const buffer = gif.out.getData()
-
   // create the folder
   fs.mkdirSync(path.dirname(options.output), {recursive: true})
-  fs.writeFileSync(options.output, buffer)
 
   switch (options.type) {
     case 'gif':
-      await encodeGif(buffer, options.output)
+      await encodeGif(tmpGif.out.getData(), options.output)
       break
     case 'webp':
-      await encodeWebp(buffer, options.output)
+      await encodeWebp(options.output)
       break
   }
 

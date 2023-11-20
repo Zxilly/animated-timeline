@@ -102,3 +102,6 @@ lib/**/*
 tmp/
 output.*
 dist/
+test.*
+/webp-*/
+debug.gif
