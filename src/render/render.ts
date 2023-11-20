@@ -35,7 +35,10 @@ const yMargin = 4
 
 const boxSize = 15
 
-const FRAME_RATE = 60
+// gif can only set delay as 1/100 sec, so we need to limit the frame rate
+// this can help to keep the same speed as the webp
+const FRAME_RATE = 50
+
 const maxTotalFrames = FRAME_RATE * MAX_PIC_TIME
 
 const speedLimit = 0.1
