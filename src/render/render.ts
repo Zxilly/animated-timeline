@@ -57,7 +57,7 @@ interface renderOptions {
   token: string
   name?: string
   output: string
-  type: 'webp' | 'gif'
+  type: 'webp' | 'gif' | 'both'
 }
 
 const lastSecondMaxSpeed: number[] = []
@@ -300,7 +300,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   core.info(`Rendering max ${maxTotalFrames} frames...`)
 
-  if (options.type === 'gif') {
+  if (options.type === 'gif' || options.type === 'both') {
     tmpGif.start()
   }
 
@@ -356,9 +356,11 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       )
     }
 
-    if (options.type === 'gif') {
+    if (options.type === 'gif' || options.type === 'both') {
       tmpGif.addFrame(ctx)
-    } else {
+    }
+
+    if (options.type === 'webp' || options.type === 'both') {
       const current = ctx.canvas.toBuffer('image/png')
       const currentPath = path.join(webpTempDir, `${i}.png`)
       fs.writeFileSync(currentPath, current)
@@ -387,6 +389,12 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       break
     case 'webp':
       await encodeWebp(options.output)
+      break
+    case 'both':
+      await Promise.all([
+        encodeGif(tmpGif.out.getData(), `${options.output}.gif`),
+        encodeWebp(`${options.output}.webp`)
+      ])
       break
   }
 

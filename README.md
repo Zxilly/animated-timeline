@@ -12,7 +12,7 @@ Create animation from your GitHub contribution.
   with:
     name: 'Zxilly' # optional, default: repository owner
     output: 'assets/animation.webp'
-    type: 'webp' # gif or webp
+    type: 'webp' # gif, webp or both
   env:
     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

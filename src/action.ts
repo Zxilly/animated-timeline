@@ -5,8 +5,8 @@ import 'source-map-support/register'
 
 async function run(): Promise<void> {
   const type = core.getInput('type')
-  if (type !== 'webp' && type !== 'gif') {
-    core.setFailed('Invalid type, must be webp or gif')
+  if (type !== 'webp' && type !== 'gif' && type !== 'both') {
+    core.setFailed('Invalid type, must be webp, gif or both')
     return
   }
 
@@ -19,14 +19,15 @@ async function run(): Promise<void> {
     return
   }
 
-  const output = core.getInput('output')
+  let output = core.getInput('output')
   if (!output) {
     core.setFailed('Invalid output')
     return
   }
 
-  if (name && !name.endsWith(`.${type}`)) {
-    core.warning(`Output filename not met type.\nname: ${name}\ntype: ${type}`)
+  if (type !== 'both' && !output.endsWith(`.${type}`)) {
+    core.warning(`Output file name does not end with .${type}`)
+    output += `.${type}`
   }
 
   await renderAnimatedGif({

@@ -9,11 +9,11 @@ inputs:
     description: 'Name displayed in the animation, by default it is the username of the token'
     required: false
   output:
-    description: 'Output file name'
+    description: 'Output file name, by default it is animation.webp, if it doesn''t end with .webp or .gif, type option will be used'
     required: false
     default: 'animation.webp'
   type:
-    description: 'Output file type, can be webp or gif'
+    description: 'Output file type, can be webp, gif or both'
     required: false
     default: 'webp'
 runs:

@@ -4,24 +4,20 @@ on:
 
 jobs:
   test:
+    strategy:
+      matrix:
+        type: [ webp, gif, both ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./
         with:
-          output: 'animation.webp'
-          type: 'webp'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: ./
-        with:
-          output: 'animation.gif'
-          type: 'gif'
+          output: 'animation'
+          type: ${{ matrix.type }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v3
         with:
-          name: animation
+          name: ${{ matrix.type }}
           path: |
-            animation.webp
-            animation.gif
+            animation.*
