@@ -11,6 +11,8 @@ jobs:
         with:
           output: 'animation.webp'
           type: 'webp'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./
         with:
           output: 'animation.gif'
