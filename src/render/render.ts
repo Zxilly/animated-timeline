@@ -86,9 +86,9 @@ async function encodeWebp(buf: Buffer, output: string): Promise<void> {
 
   execFileSync('gif2webp', [
     gif,
-    '--quiet',
-    '--mixed',
-    '--min_size',
+    '-quiet',
+    '-mixed',
+    '-min_size',
     '-q',
     '100',
     '-o',

@@ -11,9 +11,15 @@ jobs:
         with:
           output: 'animation.webp'
           type: 'webp'
+      - uses: ./
+        with:
+          output: 'animation.gif'
+          type: 'gif'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v3
         with:
           name: animation
-          path: animation.webp
+          path: |
+            animation.webp
+            animation.gif
