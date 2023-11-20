@@ -90,7 +90,7 @@ async function encodeWebp(buf: Buffer, output: string): Promise<void> {
     '-mixed',
     '-min_size',
     '-q',
-    '100',
+    '0',
     '-o',
     output
   ])
