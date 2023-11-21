@@ -2,9 +2,7 @@ name: Clean outdated image
 on:
   workflow_dispatch:
 
-permissions:
-  packages: write
-  contents: write
+permissions: write-all
 
 jobs:
   clean:
