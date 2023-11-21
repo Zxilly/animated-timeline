@@ -2,6 +2,10 @@ name: Clean outdated image
 on:
   workflow_dispatch:
 
+permissions:
+  packages: write
+  contents: write
+
 jobs:
   clean:
     runs-on: ubuntu-latest
