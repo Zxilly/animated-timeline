@@ -12,17 +12,16 @@ jobs:
           github-token: ${{ secrets.TOKEN }}
           script: |
             function shouldDelete(version) {
-                if (version.metadata.container.tags.length == 0) {
+              if (version.metadata.container.tags.length == 0) {
+                return true;
+              } else {
+                for (tag of version.metadata.container.tags) {
+                  if (tag.startsWith("dependabot")) {
                     return true;
-                } else {
-                    for (tag of version.metadata.container.tags) {
-                        if (tag.startsWith("dependabot") {
-                            return true;
-                        }
-                    }
+                  }
                 }
-                
-                return false;
+              }
+              return false;
             }
             
             const response = await github.request("GET /user/packages/container/${{ env.PACKAGE_NAME }}/versions",
