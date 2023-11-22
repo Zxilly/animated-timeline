@@ -18,12 +18,12 @@ jobs:
                 return true;
               } else {
                 for (tag of version.metadata.container.tags) {
-                  if (tag.startsWith("dependabot")) {
-                    return true;
+                  if (tag.startsWith("v") || tag === "master") {
+                    return false;
                   }
                 }
               }
-              return false;
+              return true;
             }
             
             const response = await github.request("GET /user/packages/container/${{ env.PACKAGE_NAME }}/versions",
