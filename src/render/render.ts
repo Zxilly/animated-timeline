@@ -25,6 +25,8 @@ import fontBin from '../../font/NotoSerifSC-Regular.otf'
 import {execFileSync} from 'child_process'
 import * as process from 'process'
 
+import {Bezier} from 'bezier-js'
+
 const WIDTH = 1200
 const HEIGHT = 500
 
@@ -33,7 +35,12 @@ const MAX_PIC_TIME = 12
 const xMargin = 4
 const yMargin = 4
 
-const boxSize = 15
+const boxSize = 16
+const fontSize = 128
+
+const lutStep = 10
+
+const backgroundColor = '#fafafa'
 
 // gif can only set delay as 1/100 sec, so we need to limit the frame rate
 // this can help to keep the same speed as the webp
@@ -159,14 +166,14 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     {
       isStatic: true,
       render: {
-        fillStyle: 'white'
+        fillStyle: backgroundColor
       }
     }
   )
   const left = Bodies.rectangle(-boxSize, HEIGHT / 2, boxSize * 2, HEIGHT, {
     isStatic: true,
     render: {
-      fillStyle: 'white'
+      fillStyle: backgroundColor
     }
   })
   const right = Bodies.rectangle(
@@ -177,7 +184,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     {
       isStatic: true,
       render: {
-        fillStyle: 'white'
+        fillStyle: backgroundColor
       }
     }
   )
@@ -187,33 +194,86 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   const text: Vector[][] = []
 
-  const paths = font.getPaths(name, WIDTH / 2, HEIGHT / 2, 144)
+  const paths = font.getPaths(name, WIDTH / 2, HEIGHT / 2, fontSize)
 
   for (const pa of paths) {
     const cmds = pa.commands
     let points: Vector[] = []
+    let currentPoint: {x: number; y: number} | undefined = undefined
     for (const cmd of cmds) {
       switch (cmd.type) {
         case 'M':
         case 'L':
+          currentPoint = {x: cmd.x, y: cmd.y}
           points.push(Vector.create(cmd.x, cmd.y))
           break
         case 'Q':
-          points.push(Vector.create((cmd.x1 + cmd.x) / 2, (cmd.y1 + cmd.y) / 2))
+          ;(() => {
+            if (currentPoint === undefined) {
+              throw new Error('currentPoint is undefined')
+            }
+
+            const bez = new Bezier(
+              {
+                x: currentPoint.x,
+                y: currentPoint.y
+              },
+              {
+                x: cmd.x1,
+                y: cmd.y1
+              },
+              {
+                x: cmd.x,
+                y: cmd.y
+              }
+            )
+
+            const lut = bez.getLUT(lutStep)
+
+            for (const point of lut) {
+              points.push(Vector.create(point.x, point.y))
+            }
+
+            currentPoint = {x: cmd.x, y: cmd.y}
+          })()
           break
         case 'C':
-          points.push(
-            Vector.create(
-              (cmd.x1 + cmd.x2 + cmd.x) / 3,
-              (cmd.y1 + cmd.y2 + cmd.y) / 3
+          ;(() => {
+            if (currentPoint === undefined) {
+              throw new Error('currentPoint is undefined')
+            }
+
+            const bez = new Bezier(
+              {
+                x: currentPoint.x,
+                y: currentPoint.y
+              },
+              {
+                x: cmd.x1,
+                y: cmd.y1
+              },
+              {
+                x: cmd.x2,
+                y: cmd.y2
+              },
+              {
+                x: cmd.x,
+                y: cmd.y
+              }
             )
-          )
+
+            const lut = bez.getLUT(lutStep)
+
+            for (const point of lut) {
+              points.push(Vector.create(point.x, point.y))
+            }
+
+            currentPoint = {x: cmd.x, y: cmd.y}
+          })()
           break
         case 'Z':
-          if (points.length > 0) {
-            text.push(points)
-            points = []
-          }
+          text.push(points)
+          points = []
       }
     }
   }
@@ -221,7 +281,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   const textBodies = fromVertices(WIDTH / 2, HEIGHT / 2, text, {
     isStatic: true,
     render: {
-      fillStyle: 'white'
+      fillStyle: 'rgba(0, 0, 0, 0)'
     }
   })
 
@@ -241,7 +301,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       const day = weeks[i].contributionDays[j]
       if (day.contributionCount === 0) continue
 
-      let density = 0
+      let density = 1
       switch (day.contributionLevel) {
         case 'FIRST_QUARTILE':
           density = 4
@@ -262,9 +322,6 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       const square = Bodies.rectangle(x, y, boxSize, boxSize, {
         render: {
           fillStyle: day.color
-        },
-        chamfer: {
-          radius: 3
         },
         density
       })
@@ -289,7 +346,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   })
 
   const fontPathBound = font
-    .getPath(name, WIDTH / 2, HEIGHT / 2, 144)
+    .getPath(name, WIDTH / 2, HEIGHT / 2, fontSize)
     .getBoundingBox()
 
   const shapeCenterX = (textBound.max.x + textBound.min.x) / 2
@@ -304,13 +361,18 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     tmpGif.start()
   }
 
+  if (debug) {
+    fs.rmSync('tmp', {recursive: true})
+    fs.mkdirSync('tmp', {recursive: true})
+  }
+
   for (let i = 0; i < maxTotalFrames; i++) {
     if ((i + 1) % 20 === 0) {
       core.info(`Rendered ${i + 1} frames.`)
     }
 
     Engine.update(engine, 1000 / FRAME_RATE)
-    ctx.fillStyle = 'white'
+    ctx.fillStyle = backgroundColor
     ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
     // @ts-ignore
@@ -322,7 +384,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       name,
       WIDTH / 2 - (fontCenterX - shapeCenterX),
       HEIGHT / 2 - (fontCenterY - shapeCenterY),
-      144
+      fontSize
     )
 
     if (debug) {
@@ -354,6 +416,8 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
         50,
         12
       )
+
+      fs.writeFileSync(`tmp/debug-${i}.png`, img.toBuffer('image/png'))
     }
 
     if (options.type === 'gif' || options.type === 'both') {
@@ -397,6 +461,8 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       ])
       break
   }
+
+  fs.rmSync(webpTempDir, {recursive: true, force: true})
 
   core.info('Encoded file written.')
 }
