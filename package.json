@@ -42,7 +42,7 @@
     "poly-decomp": "^0.3.0",
     "prettier": "^3.2.3",
     "source-map-support": "^0.5.21",
-    "ts-jest": "^29.1.1",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
