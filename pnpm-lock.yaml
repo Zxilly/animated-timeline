@@ -20,8 +20,8 @@ devDependencies:
     specifier: ^29.7.0
     version: 29.7.0
   '@octokit/graphql-schema':
-    specifier: ^14.47.1
-    version: 14.47.1
+    specifier: ^14.48.0
+    version: 14.48.0
   '@types/bezier-js':
     specifier: ^4.1.3
     version: 4.1.3
@@ -1165,8 +1165,8 @@ packages:
       universal-user-agent: 6.0.0
     dev: true
 
-  /@octokit/graphql-schema@14.47.1:
-    resolution: {integrity: sha512-U/HA28j31K6NHUgxWcwqsm1j0cbvNSRx6kPSUVNTxO1CDvN75TjlEl8CV+I3FooYPbGtaETd7cDR4PTdwUShig==}
+  /@octokit/graphql-schema@14.48.0:
+    resolution: {integrity: sha512-0+jbKiRdnuh/nYTD5qMpxLqsZg8hv+Jhp/Xfxj1D59jUUGjp3uVPcp3wp0mR/3chyaRHitk9UXhCpH3/zP1Iqw==}
     dependencies:
       graphql: 16.8.1
       graphql-tag: 2.12.6(graphql@16.8.1)
