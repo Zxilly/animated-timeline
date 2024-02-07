@@ -13,19 +13,21 @@ import Matter, {
 } from 'matter-js'
 import GIFEncoder from 'gif-encoder-2'
 import {createCanvas} from 'canvas'
+
 import {parse} from 'opentype.js'
 import * as fs from 'fs'
-// @ts-ignore
+
 import fromVertices from '../utils/bodies'
-import polyDecomp from 'poly-decomp'
+import polyDecomp from 'poly-decomp-es'
 import * as core from '@actions/core'
 import * as path from 'path'
-// @ts-ignore
+
 import fontBin from '../../font/NotoSerifSC-Regular.otf'
 import {execFileSync} from 'child_process'
 import * as process from 'process'
 
 import {Bezier} from 'bezier-js'
+import {castCanvas} from '../utils/cast'
 
 const WIDTH = 1200
 const HEIGHT = 500
@@ -289,7 +291,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     bodies: textBodies
   })
 
-  // @ts-ignore
+  // @ts-expect-error
   const textBound: Bounds = Composite.bounds(textComp)
 
   World.add(engine.world, textComp)
@@ -375,7 +377,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     ctx.fillStyle = backgroundColor
     ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
-    // @ts-ignore
+    // @ts-expect-error
     Render.bodies(render, Composite.allBodies(engine.world), ctx)
 
     font.draw(
@@ -399,18 +401,9 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
       const [speed, angularSpeed] = maxWorldSpeed(engine.world)
 
+      font.draw(castCanvas(ctx), `speed: ${speed.toFixed(3)}`, 10, 30, 12)
       font.draw(
-        // @ts-ignore
-        ctx,
-        `speed: ${speed.toFixed(3)}`,
-        10,
-        30,
-        12
-      )
-
-      font.draw(
-        // @ts-ignore
-        ctx,
+        castCanvas(ctx),
         `angular speed: ${angularSpeed.toFixed(3)}`,
         10,
         50,

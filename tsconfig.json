@@ -2,9 +2,12 @@
   "compilerOptions": {
     "target": "es2021",
     "lib": [
+      "DOM",
       "ES2021"
     ],
-    "typeRoots" : ["./node_modules/@types", "./typings"],
+    "typeRoots" : ["./node_modules/@types",
+      "./src/typings"
+    ],
     "module": "commonjs",
     "rootDir": "./src",
     "baseUrl": ".",
@@ -17,6 +20,6 @@
     "**/*.test.ts"
   ],
   "include": [
-    "src/**/*.ts",
+    "src/**/*.ts"
   ]
 }
