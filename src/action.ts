@@ -45,7 +45,10 @@ async function run(): Promise<void> {
 
   const login = getInput('login') // may be filled later
 
+  const font = getInput('font')
+
   await renderAnimatedGif({
+    font,
     token,
     login,
     type: type as EncoderType,

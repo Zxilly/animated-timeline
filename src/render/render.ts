@@ -26,6 +26,7 @@ interface renderOptions {
   login: string
   name?: string
   output: string
+  font: string
   type: EncoderType
 }
 
@@ -43,7 +44,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   const ctx = img.getContext('2d')
   const engine = Engine.create()
 
-  await loadFont()
+  await loadFont(options.font)
 
   setBounds(engine.world)
   drawText(engine.world, name)

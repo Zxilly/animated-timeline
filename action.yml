@@ -19,6 +19,9 @@ inputs:
     default: ${{ github.token }}
   login:
     description: 'The target user to fetch the contributions, by default it is the username of the token'
+  font:
+    description: 'Font file used in the animation, by default it is Noto Serif CJK SC'
+    default: ''
 runs:
   using: 'docker'
   image: 'docker://ghcr.io/zxilly/animatedtimeline:master'
