@@ -1,41 +1,65 @@
 import {renderAnimatedGif} from './render/render'
-import * as core from '@actions/core'
+import {getInput, setFailed} from '@actions/core'
 import * as process from 'process'
-import 'source-map-support/register'
+import {gifsicle, img2webp} from './utils/bins'
+import {EncoderType} from './render/encoder'
 
 async function run(): Promise<void> {
-  const type = core.getInput('type')
-  if (type !== 'webp' && type !== 'gif' && type !== 'both') {
-    core.setFailed('Invalid type, must be webp, gif or both')
-    return
-  }
+  const name: string | null = getInput('name') === '' ? null : getInput('name')
 
-  const name: string | null =
-    core.getInput('name') === '' ? null : core.getInput('name')
-
-  const token = process.env['GITHUB_TOKEN']
+  const token = getInput('token')
   if (!token) {
-    core.setFailed('Token must be provided as environment variable')
+    setFailed('Token must be provided as environment variable')
     return
   }
 
-  let output = core.getInput('output')
+  let typeFound = false
+  let type = getInput('type')
+  if (type !== 'webp' && type !== 'gif' && type !== 'both') {
+    if (type !== '') {
+      setFailed(`Invalid type: ${type}`)
+      return
+    }
+    typeFound = false
+  } else {
+    typeFound = true
+  }
+
+  const output = getInput('output')
   if (!output) {
-    core.setFailed('Invalid output')
+    setFailed('No output file specified')
     return
   }
 
-  if (type !== 'both' && !output.endsWith(`.${type}`)) {
-    core.warning(`Output file name does not end with .${type}`)
-    output += `.${type}`
+  if (!typeFound) {
+    const guessedType = output.split('.').pop()
+    if (guessedType !== 'webp' && guessedType !== 'gif') {
+      setFailed(
+        'File type can not be determined from output file nor be specified'
+      )
+      return
+    }
+
+    type = guessedType
   }
+
+  const login = getInput('login') // may be filled later
 
   await renderAnimatedGif({
     token,
-    type,
+    login,
+    type: type as EncoderType,
     name,
     output
   })
 }
 
-run()
+;(async () => {
+  if (process.argv.length > 2 && process.argv[2] === 'ensure') {
+    await img2webp.ensureExist()
+    await gifsicle.ensureExist()
+    return
+  } else {
+    await run()
+  }
+})()

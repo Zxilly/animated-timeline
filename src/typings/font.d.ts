@@ -1,3 +1,4 @@
-declare module '*.otf' {
-  const buffer: Buffer
+declare module '*.woff2' {
+  const value: string
+  export default value
 }

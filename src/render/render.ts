@@ -1,146 +1,37 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import {getCalendar} from '../github/calendar'
-import Matter, {
-  Bodies,
-  Bounds,
-  Common,
-  Composite,
-  Engine,
-  Render,
-  Vector,
-  World
-} from 'matter-js'
-import GIFEncoder from 'gif-encoder-2'
+import {Composite, Engine, Render} from 'matter-js'
 import {createCanvas} from 'canvas'
+import fs from 'fs'
 
-import {parse} from 'opentype.js'
-import * as fs from 'fs'
+import core from '@actions/core'
+import path from 'path'
 
-import fromVertices from '../utils/bodies'
-import polyDecomp from 'poly-decomp-es'
-import * as core from '@actions/core'
-import * as path from 'path'
-
-import fontBin from '../../font/NotoSerifSC-Regular.otf'
-import {execFileSync} from 'child_process'
-import * as process from 'process'
-
-import {Bezier} from 'bezier-js'
 import {castCanvas} from '../utils/cast'
-
-const WIDTH = 1200
-const HEIGHT = 500
-
-const MAX_PIC_TIME = 12
-
-const xMargin = 4
-const yMargin = 4
-
-const boxSize = 16
-const fontSize = 128
-
-const lutStep = 10
-
-const backgroundColor = '#fafafa'
-
-// gif can only set delay as 1/100 sec, so we need to limit the frame rate
-// this can help to keep the same speed as the webp
-const FRAME_RATE = 50
-
-const maxTotalFrames = FRAME_RATE * MAX_PIC_TIME
-
-const speedLimit = 0.1
-const angularSpeedLimit = 0.05
-
-const debug = process.env.DEBUG !== undefined
-
-const tmpGif = new GIFEncoder(WIDTH, HEIGHT, 'neuquant', false)
-tmpGif.setFrameRate(FRAME_RATE)
-tmpGif.setRepeat(1)
-
-const webpTempDir = fs.mkdtempSync('webp-')
-let webpFrameIndex = 0
+import {
+  backgroundColor,
+  debug,
+  FRAME_RATE,
+  HEIGHT,
+  maxTotalFrames,
+  WIDTH
+} from './const'
+import {drawCalendar} from './calendar'
+import {isWorldStopped, maxWorldSpeed} from './utils'
+import {drawText, loadFont, useFont} from './text'
+import {setBounds} from './bounds'
+import {EncoderType, loadEncoder} from './encoder'
 
 interface renderOptions {
   token: string
+  login: string
   name?: string
   output: string
-  type: 'webp' | 'gif' | 'both'
-}
-
-const lastSecondMaxSpeed: number[] = []
-
-function isWorldStopped(world: Matter.World): boolean {
-  const [max, maxAngular] = maxWorldSpeed(world)
-  lastSecondMaxSpeed.push(max)
-  if (lastSecondMaxSpeed.length > FRAME_RATE) {
-    lastSecondMaxSpeed.shift()
-  }
-  const avgSpeed =
-    lastSecondMaxSpeed.reduce((acc, cur) => acc + cur, 0) /
-    lastSecondMaxSpeed.length
-  return (
-    avgSpeed < speedLimit ||
-    (maxAngular < angularSpeedLimit && avgSpeed < speedLimit * 2)
-  )
-}
-
-function maxWorldSpeed(world: Matter.World): [number, number] {
-  let maxSpeed = 0
-  let maxAngularSpeed = 0
-  for (const body of world.bodies) {
-    if (body.isStatic) continue
-    if (body.speed > maxSpeed) maxSpeed = body.speed
-    if (body.angularSpeed > maxAngularSpeed) maxAngularSpeed = body.angularSpeed
-  }
-  return [maxSpeed, maxAngularSpeed]
-}
-
-async function encodeWebp(output: string): Promise<void> {
-  const files = []
-  for (let i = 0; i < webpFrameIndex; i++) {
-    files.push(path.join(webpTempDir, `${i}.png`))
-  }
-
-  execFileSync('img2webp', [
-    '-mixed',
-    '-min_size',
-    '-q',
-    '60',
-    '-d',
-    `${Math.floor(1000 / FRAME_RATE)}`,
-    '-loop',
-    '1',
-    ...files,
-    '-o',
-    output
-  ])
-
-  fs.rmSync(webpTempDir, {recursive: true, force: true})
-}
-
-async function encodeGif(buf: Buffer, output: string): Promise<void> {
-  if (debug) {
-    fs.writeFileSync('debug.gif', buf)
-  }
-
-  fs.writeFileSync(output, buf)
-
-  execFileSync('gifsicle', [
-    '--optimize=3',
-    '--colors',
-    '16',
-    '--no-loopcount',
-    '--batch',
-    '--interlace',
-    output
-  ])
+  type: EncoderType
 }
 
 export async function renderAnimatedGif(options: renderOptions): Promise<void> {
   core.info('Fetching calendar data...')
-  const [githubName, weeks] = await getCalendar(options.token)
+  const [githubName, weeks] = await getCalendar(options.login, options.token)
   core.info('Calendar data fetched.')
 
   let name = githubName
@@ -148,225 +39,32 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     name = options.name
   }
 
-  const xOffset =
-    WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
-  const yOffset = -160
-
-  const font = parse(fontBin.buffer)
-
   const img = createCanvas(WIDTH, HEIGHT)
-
   const ctx = img.getContext('2d')
-
   const engine = Engine.create()
 
-  const ground = Bodies.rectangle(
-    WIDTH / 2,
-    HEIGHT + boxSize,
-    WIDTH + boxSize,
-    boxSize * 2,
-    {
-      isStatic: true,
-      render: {
-        fillStyle: backgroundColor
-      }
-    }
-  )
-  const left = Bodies.rectangle(-boxSize, HEIGHT / 2, boxSize * 2, HEIGHT, {
-    isStatic: true,
-    render: {
-      fillStyle: backgroundColor
-    }
-  })
-  const right = Bodies.rectangle(
-    WIDTH + boxSize,
-    HEIGHT / 2,
-    boxSize * 2,
-    HEIGHT,
-    {
-      isStatic: true,
-      render: {
-        fillStyle: backgroundColor
-      }
-    }
-  )
-  World.add(engine.world, [ground, left, right])
+  await loadFont()
 
-  Common.setDecomp(polyDecomp)
+  setBounds(engine.world)
+  drawText(engine.world, name)
+  drawCalendar(engine.world, weeks)
 
-  const text: Vector[][] = []
+  const encoder = loadEncoder(options.type)
 
-  const paths = font.getPaths(name, WIDTH / 2, HEIGHT / 2, fontSize)
-
-  for (const pa of paths) {
-    const cmds = pa.commands
-    let points: Vector[] = []
-    let currentPoint: {x: number; y: number} | undefined = undefined
-    for (const cmd of cmds) {
-      switch (cmd.type) {
-        case 'M':
-        case 'L':
-          currentPoint = {x: cmd.x, y: cmd.y}
-          points.push(Vector.create(cmd.x, cmd.y))
-          break
-        case 'Q':
-          ;(() => {
-            if (currentPoint === undefined) {
-              throw new Error('currentPoint is undefined')
-            }
-
-            const bez = new Bezier(
-              {
-                x: currentPoint.x,
-                y: currentPoint.y
-              },
-              {
-                x: cmd.x1,
-                y: cmd.y1
-              },
-              {
-                x: cmd.x,
-                y: cmd.y
-              }
-            )
-
-            const lut = bez.getLUT(lutStep)
-
-            for (const point of lut) {
-              points.push(Vector.create(point.x, point.y))
-            }
-
-            currentPoint = {x: cmd.x, y: cmd.y}
-          })()
-          break
-        case 'C':
-          ;(() => {
-            if (currentPoint === undefined) {
-              throw new Error('currentPoint is undefined')
-            }
-
-            const bez = new Bezier(
-              {
-                x: currentPoint.x,
-                y: currentPoint.y
-              },
-              {
-                x: cmd.x1,
-                y: cmd.y1
-              },
-              {
-                x: cmd.x2,
-                y: cmd.y2
-              },
-              {
-                x: cmd.x,
-                y: cmd.y
-              }
-            )
-
-            const lut = bez.getLUT(lutStep)
-
-            for (const point of lut) {
-              points.push(Vector.create(point.x, point.y))
-            }
-
-            currentPoint = {x: cmd.x, y: cmd.y}
-          })()
-          break
-        case 'Z':
-          text.push(points)
-          points = []
-      }
-    }
-  }
-
-  const textBodies = fromVertices(WIDTH / 2, HEIGHT / 2, text, {
-    isStatic: true,
-    render: {
-      fillStyle: 'rgba(0, 0, 0, 0)'
-    }
-  })
-
-  const textComp = Composite.create({
-    bodies: textBodies
-  })
-
-  // @ts-expect-error
-  const textBound: Bounds = Composite.bounds(textComp)
-
-  World.add(engine.world, textComp)
-
-  const squares: Matter.Body[] = []
-
-  for (let i = 0; i < weeks.length; i++) {
-    for (let j = 0; j < weeks[i].contributionDays.length; j++) {
-      const day = weeks[i].contributionDays[j]
-      if (day.contributionCount === 0) continue
-
-      let density = 1
-      switch (day.contributionLevel) {
-        case 'FIRST_QUARTILE':
-          density = 4
-          break
-        case 'SECOND_QUARTILE':
-          density = 8
-          break
-        case 'THIRD_QUARTILE':
-          density = 12
-          break
-        case 'FOURTH_QUARTILE':
-          density = 16
-          break
-      }
-
-      const x = xOffset + i * boxSize + (i - 1) * xMargin
-      const y = yOffset + j * boxSize + (j - 1) * yMargin
-      const square = Bodies.rectangle(x, y, boxSize, boxSize, {
-        render: {
-          fillStyle: day.color
-        },
-        density
-      })
-
-      squares.push(square)
-    }
-  }
-
-  World.add(engine.world, squares)
+  await encoder.init()
 
   const render = Render.create({
-    // @ts-ignore
-    canvas: img,
+    canvas: img as unknown as HTMLCanvasElement,
     engine,
     options: {
       width: WIDTH,
       height: HEIGHT,
       wireframes: false,
-      wireframeBackground: undefined,
       background: undefined
     }
   })
 
-  const fontPathBound = font
-    .getPath(name, WIDTH / 2, HEIGHT / 2, fontSize)
-    .getBoundingBox()
-
-  const shapeCenterX = (textBound.max.x + textBound.min.x) / 2
-  const shapeCenterY = (textBound.max.y + textBound.min.y) / 2
-
-  const fontCenterX = (fontPathBound.x2 + fontPathBound.x1) / 2
-  const fontCenterY = (fontPathBound.y2 + fontPathBound.y1) / 2
-
   core.info(`Rendering max ${maxTotalFrames} frames...`)
-
-  if (options.type === 'gif' || options.type === 'both') {
-    tmpGif.start()
-  }
-
-  if (debug) {
-    fs.rmSync('tmp', {recursive: true})
-    fs.mkdirSync('tmp', {recursive: true})
-  }
 
   for (let i = 0; i < maxTotalFrames; i++) {
     if ((i + 1) % 20 === 0) {
@@ -374,35 +72,21 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     }
 
     Engine.update(engine, 1000 / FRAME_RATE)
+
+    // reset the canvas
     ctx.fillStyle = backgroundColor
     ctx.fillRect(0, 0, WIDTH, HEIGHT)
 
     // @ts-expect-error
     Render.bodies(render, Composite.allBodies(engine.world), ctx)
 
-    font.draw(
-      // @ts-ignore
-      ctx,
-      name,
-      WIDTH / 2 - (fontCenterX - shapeCenterX),
-      HEIGHT / 2 - (fontCenterY - shapeCenterY),
-      fontSize
-    )
-
     if (debug) {
-      font.draw(
-        // @ts-ignore
-        ctx,
-        `frame: ${i + 1}`,
-        10,
-        10,
-        12
-      )
+      useFont().draw(castCanvas(ctx), `frame: ${i + 1}`, 10, 10, 12)
 
       const [speed, angularSpeed] = maxWorldSpeed(engine.world)
 
-      font.draw(castCanvas(ctx), `speed: ${speed.toFixed(3)}`, 10, 30, 12)
-      font.draw(
+      useFont().draw(castCanvas(ctx), `speed: ${speed.toFixed(3)}`, 10, 30, 12)
+      useFont().draw(
         castCanvas(ctx),
         `angular speed: ${angularSpeed.toFixed(3)}`,
         10,
@@ -413,49 +97,21 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
       fs.writeFileSync(`tmp/debug-${i}.png`, img.toBuffer('image/png'))
     }
 
-    if (options.type === 'gif' || options.type === 'both') {
-      tmpGif.addFrame(ctx)
-    }
-
-    if (options.type === 'webp' || options.type === 'both') {
-      const current = ctx.canvas.toBuffer('image/png')
-      const currentPath = path.join(webpTempDir, `${i}.png`)
-      fs.writeFileSync(currentPath, current)
-      webpFrameIndex = i
-    }
+    await encoder.onFrame(ctx, i)
 
     if (i > 30 && isWorldStopped(engine.world)) {
       core.info(`World stopped at frame ${i + 1}. Stopping render.`)
-      if (options.type === 'gif') {
-        tmpGif.finish()
-      }
-
       break
     }
   }
 
   core.info('Render finished.')
-  core.info('Encoding...')
+  core.info('Compressing...')
 
-  // create the folder
+  // create the output folder
   fs.mkdirSync(path.dirname(options.output), {recursive: true})
 
-  switch (options.type) {
-    case 'gif':
-      await encodeGif(tmpGif.out.getData(), options.output)
-      break
-    case 'webp':
-      await encodeWebp(options.output)
-      break
-    case 'both':
-      await Promise.all([
-        encodeGif(tmpGif.out.getData(), `${options.output}.gif`),
-        encodeWebp(`${options.output}.webp`)
-      ])
-      break
-  }
+  await encoder.finalize(options.output, options.type === 'both')
 
-  fs.rmSync(webpTempDir, {recursive: true, force: true})
-
-  core.info('Encoded file written.')
+  core.info('Compressed file written.')
 }

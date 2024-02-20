@@ -25,19 +25,28 @@ const query = `
     }
 `
 
+export type Weeks = Pick<ContributionCalendarWeek, 'contributionDays'>[]
+
 export async function getCalendar(
+  login: string,
   token: string
-): Promise<[string, Pick<ContributionCalendarWeek, 'contributionDays'>[]]> {
+): Promise<[string, Weeks]> {
   const octokit = github.getOctokit(token)
+
+  if (login === '') {
+    const current = await octokit.rest.users.getAuthenticated()
+    login = current.data.login
+  }
+
   const ret = await octokit.graphql<{user: User}>(query, {
-    login: github.context.repo.owner
+    login
   })
 
   const weeks = ret.user.contributionsCollection.contributionCalendar.weeks
   const name = ret.user.name
-  const login = ret.user.login
+  const userLogin = ret.user.login
 
-  const display = name ? name : login
+  const display = name ? name : userLogin
   return [
     display,
     weeks as Pick<ContributionCalendarWeek, 'contributionDays'>[]

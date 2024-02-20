@@ -1,4 +1,4 @@
-FROM node:20-slim AS base
+FROM node:21-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -16,9 +16,9 @@ FROM base
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
 
-RUN echo "deb http://deb.debian.org/debian sid main" >> /etc/apt/sources.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends webp gifsicle && \
-    rm -rf /var/lib/apt/lists/*
+# Download the bianry
+RUN node /app/dist/action.js ensure
 
-CMD [ "node", "/app/dist/index.js" ]
+ENV NODE_OPTIONS="--enable-source-maps"
+
+CMD [ "node", "/app/dist/action.js" ]

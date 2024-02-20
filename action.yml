@@ -7,15 +7,18 @@ branding:
 inputs:
   name:
     description: 'Name displayed in the animation, by default it is the username of the token'
-    required: false
   output:
-    description: 'Output file name, by default it is animation.webp, if it doesn''t end with .webp or .gif, type option will be used'
-    required: false
+    description: "Output file name, by default it is animation.webp, if it doesn't end with .webp or .gif, type option will be used"
     default: 'animation.webp'
   type:
-    description: 'Output file type, can be webp, gif or both'
-    required: false
-    default: 'webp'
+    description: 'Output file type, can be webp, gif or both. If omitted, it will be determined by the output file name'
+    default: ''
+  token:
+    description: >
+      Personal access token (PAT) used
+    default: ${{ github.token }}
+  login:
+    description: 'The target user to fetch the contributions, by default it is the username of the token'
 runs:
   using: 'docker'
   image: 'docker://ghcr.io/zxilly/animatedtimeline:master'

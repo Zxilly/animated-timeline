@@ -8,12 +8,14 @@
     "typeRoots" : ["./node_modules/@types",
       "./src/typings"
     ],
-    "module": "commonjs",
+    "module": "ESNext",
     "rootDir": "./src",
     "baseUrl": ".",
     "strict": false,
     "noImplicitAny": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "sourceMap": true
   },
   "exclude": [
     "node_modules",

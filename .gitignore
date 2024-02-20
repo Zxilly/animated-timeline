@@ -103,5 +103,7 @@ tmp/
 output.*
 dist/
 test.*
-/webp-*/
+webp-*/
 debug.gif
+
+vendor/
