@@ -1,7 +1,6 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import url from '@rollup/plugin-url'
-import {wasm} from '@rollup/plugin-wasm'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
 
@@ -20,15 +19,11 @@ const config = {
       preferBuiltins: true
     }),
     json(),
-    commonjs({
-      ignoreDynamicRequires: false,
-      transformMixedEsModules: true
-    }),
+    commonjs(),
     url({
       include: ['**/*.woff2']
     }),
-    wasm(),
-    esbuild({})
+    esbuild()
   ]
 }
 
