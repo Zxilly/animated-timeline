@@ -1,6 +1,7 @@
 import * as github from '@actions/github'
 import type {User} from '@octokit/graphql-schema'
 import {ContributionCalendarWeek} from '@octokit/graphql-schema'
+import {setFailed} from '@actions/core'
 
 // language=GraphQL
 const query = `
@@ -34,13 +35,21 @@ export async function getCalendar(
   const octokit = github.getOctokit(token)
 
   if (login === '') {
-    const current = await octokit.rest.users.getAuthenticated()
+    const current = await octokit.rest.users.getAuthenticated().catch(e => {
+      setFailed("Couldn't get authenticated user, should set login manually")
+      throw e
+    })
     login = current.data.login
   }
 
-  const ret = await octokit.graphql<{user: User}>(query, {
-    login
-  })
+  const ret = await octokit
+    .graphql<{user: User}>(query, {
+      login
+    })
+    .catch(e => {
+      setFailed('Failed to fetch calendar data')
+      throw e
+    })
 
   const weeks = ret.user.contributionsCollection.contributionCalendar.weeks
   const name = ret.user.name
