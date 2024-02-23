@@ -1,4 +1,6 @@
-module.exports = {
+import type {Config} from 'jest'
+
+const config: Config = {
   clearMocks: true,
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['**/*.test.ts'],
@@ -7,3 +9,5 @@ module.exports = {
   },
   verbose: true
 }
+
+export default config

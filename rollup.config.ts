@@ -3,9 +3,9 @@ import commonjs from '@rollup/plugin-commonjs'
 import url from '@rollup/plugin-url'
 import json from '@rollup/plugin-json'
 import esbuild from 'rollup-plugin-esbuild'
+import {defineConfig} from 'rollup'
 
-/** @type {import('rollup').RollupOptions} */
-const config = {
+const config = defineConfig({
   input: 'src/action.ts',
   output: {
     file: 'dist/action.js',
@@ -25,6 +25,6 @@ const config = {
     }),
     esbuild()
   ]
-}
+})
 
 export default config
