@@ -23,8 +23,8 @@ devDependencies:
     specifier: ^29.7.0
     version: 29.7.0
   '@octokit/graphql-schema':
-    specifier: ^15.0.0
-    version: 15.0.0
+    specifier: ^15.1.0
+    version: 15.1.0
   '@rollup/plugin-commonjs':
     specifier: ^25.0.7
     version: 25.0.7(rollup@4.12.1)
@@ -1194,8 +1194,8 @@ packages:
       universal-user-agent: 6.0.0
     dev: true
 
-  /@octokit/graphql-schema@15.0.0:
-    resolution: {integrity: sha512-MPuWL1u9pzOReE3+BntQqenKg10STgXQslupdihzzlsIxpKONazZysHTq8exhcs/mOSqjgxgtWpJ5e2Nuq+SIA==}
+  /@octokit/graphql-schema@15.1.0:
+    resolution: {integrity: sha512-Q4sAgTphHqFeMeKIR5fA6kJECpTsikvyBbRaZfFGcqVJ30WqcovI4MfyTMiGgE7TWHWHQhdAIc38QhvB08E/sg==}
     dependencies:
       graphql: 16.8.1
       graphql-tag: 2.12.6(graphql@16.8.1)
