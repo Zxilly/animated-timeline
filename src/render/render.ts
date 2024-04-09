@@ -60,8 +60,9 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
     options: {
       width: WIDTH,
       height: HEIGHT,
-      wireframes: false,
-      background: undefined
+      wireframes: debug,
+      background: undefined,
+      showDebug: debug
     }
   })
 
@@ -114,5 +115,5 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   await encoder.finalize(options.output, options.type === 'both')
 
-  core.info('Compressed file written.')
+  core.info(`Compressed file ${options.output} written.`)
 }
