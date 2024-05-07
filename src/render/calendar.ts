@@ -1,7 +1,7 @@
 import {Weeks} from '../github/calendar'
 import Matter, {Bodies, World} from 'matter-js'
 import {boxSize, WIDTH, xMargin, yMargin} from './const'
-import {ContributionLevel} from '@octokit/graphql-schema'
+import {type ContributionLevel} from '@octokit/graphql-schema'
 
 function levelToDensity(level: ContributionLevel): number {
   switch (level) {
