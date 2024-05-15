@@ -33,7 +33,7 @@
     "@types/gifsicle": "^5.2.2",
     "@types/jest": "^29.5.12",
     "@types/matter-js": "^0.19.6",
-    "@types/node": "^20.12.11",
+    "@types/node": "^20.12.12",
     "@types/opentype.js": "^1.3.8",
     "@typescript-eslint/parser": "^7.9.0",
     "@zxilly/bin-wrapper": "^1.0.5",
