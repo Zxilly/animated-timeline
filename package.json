@@ -23,7 +23,7 @@
     "@actions/github": "^6.0.0",
     "@jest/globals": "^29.7.0",
     "@octokit/graphql-schema": "^15.18.0",
-    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
