@@ -1,10 +1,9 @@
 import {Encoder} from './types'
-import {CanvasRenderingContext2D} from 'canvas'
-
 import fs from 'fs'
 import path from 'path'
 import {img2webp} from '../../utils/bins'
 import {FRAME_RATE} from '../const'
+import {type SKRSContext2D} from '@napi-rs/canvas'
 
 export class WebpEncoder implements Encoder {
   tempDir: string
@@ -45,7 +44,7 @@ export class WebpEncoder implements Encoder {
     this.tempDir = await fs.promises.mkdtemp('webp-')
   }
 
-  async onFrame(ctx: CanvasRenderingContext2D, frame: number): Promise<void> {
+  async onFrame(ctx: SKRSContext2D, frame: number): Promise<void> {
     const current = ctx.canvas.toBuffer('image/png')
     const p = path.join(this.tempDir, `${frame}.png`)
     await fs.promises.writeFile(p, current)

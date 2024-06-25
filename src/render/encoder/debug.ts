@@ -1,7 +1,7 @@
 import {Encoder} from './types'
-import {CanvasRenderingContext2D} from 'canvas'
 import fs from 'fs'
 import path from 'path'
+import {type SKRSContext2D} from '@napi-rs/canvas'
 
 export class DebugEncoder implements Encoder {
   async finalize(): Promise<void> {
@@ -13,7 +13,7 @@ export class DebugEncoder implements Encoder {
     await fs.promises.mkdir('tmp')
   }
 
-  async onFrame(ctx: CanvasRenderingContext2D, frame: number): Promise<void> {
+  async onFrame(ctx: SKRSContext2D, frame: number): Promise<void> {
     const current = ctx.canvas.toBuffer('image/png')
     await fs.promises.writeFile(path.join('tmp', `debug-${frame}.png`), current)
   }

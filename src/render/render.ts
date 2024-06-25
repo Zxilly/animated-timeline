@@ -1,11 +1,9 @@
-import {getCalendar} from '../github/calendar'
 import {Composite, Engine, Render} from 'matter-js'
-import {createCanvas} from 'canvas'
-import fs from 'fs'
-
+import {createCanvas} from '@napi-rs/canvas'
 import core from '@actions/core'
+import fs from 'fs'
 import path from 'path'
-
+import {getCalendar} from '../github/calendar'
 import {castCanvas} from '../utils/cast'
 import {
   backgroundColor,

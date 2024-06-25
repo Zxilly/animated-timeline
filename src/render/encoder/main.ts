@@ -1,5 +1,5 @@
-import {CanvasRenderingContext2D} from 'canvas'
 import {Encoder} from './types'
+import {type SKRSContext2D} from '@napi-rs/canvas'
 
 export class MainEncoder implements Encoder {
   private readonly encoders: Encoder[]
@@ -18,7 +18,7 @@ export class MainEncoder implements Encoder {
     await Promise.all(this.encoders.map(async encoder => encoder.init()))
   }
 
-  async onFrame(ctx: CanvasRenderingContext2D, frame: number): Promise<void> {
+  async onFrame(ctx: SKRSContext2D, frame: number): Promise<void> {
     await Promise.all(
       this.encoders.map(async encoder => encoder.onFrame(ctx, frame))
     )

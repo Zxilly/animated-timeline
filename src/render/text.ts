@@ -1,12 +1,12 @@
 import {type Font, parse} from 'opentype.js'
 import fontBin from '../../font/noto.woff2'
 import fs from 'fs'
+import {fileURLToPath} from 'node:url'
 import {fontSize, HEIGHT, WIDTH} from './const'
 import Matter, {Body, Bounds, Composite, Vector, World} from 'matter-js'
-import paper from 'paper/dist/paper-core'
 import earcut from 'earcut'
 import {decode} from '@woff2/woff2-rs'
-import {fileURLToPath} from 'node:url'
+import paper from 'paper/dist/paper-core'
 
 let font: Font
 

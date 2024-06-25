@@ -1,8 +1,7 @@
 import {nodeResolve} from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import url from '@rollup/plugin-url'
-import json from '@rollup/plugin-json'
-import esbuild from 'rollup-plugin-esbuild'
+import typescript from '@rollup/plugin-typescript'
 import {defineConfig} from 'rollup'
 
 const config = defineConfig({
@@ -12,18 +11,19 @@ const config = defineConfig({
     format: 'esm',
     sourcemap: true
   },
-  external: ['canvas', '@woff2/woff2-rs'],
+  external: ['@napi-rs/canvas', '@woff2/woff2-rs'],
   plugins: [
+    typescript(),
     nodeResolve({
       exportConditions: ['node'],
       preferBuiltins: true
     }),
-    json(),
-    commonjs(),
+    commonjs({
+      ignore: ['jsdom/lib/jsdom/living/generated/utils']
+    }),
     url({
       include: ['**/*.woff2']
-    }),
-    esbuild()
+    })
   ]
 })
 

@@ -1,5 +1,4 @@
 import {Encoder} from './types'
-import {CanvasRenderingContext2D} from 'canvas'
 import {FRAME_RATE, HEIGHT, WIDTH} from '../const'
 import fs from 'fs'
 import {gifsicle} from '../../utils/bins'
@@ -9,6 +8,7 @@ import {
   quantize,
   applyPalette
 } from 'gifenc'
+import {type SKRSContext2D} from '@napi-rs/canvas'
 
 export class GifEncoder implements Encoder {
   tmp: GIFEncoder
@@ -43,7 +43,7 @@ export class GifEncoder implements Encoder {
     })
   }
 
-  async onFrame(ctx: CanvasRenderingContext2D): Promise<void> {
+  async onFrame(ctx: SKRSContext2D): Promise<void> {
     // Get the image data from the context
     const imageData = ctx.getImageData(0, 0, WIDTH, HEIGHT)
 

@@ -5,17 +5,21 @@
       "DOM",
       "ES2021"
     ],
-    "typeRoots" : ["./node_modules/@types",
+    "typeRoots": [
+      "./node_modules/@types",
       "./src/typings"
     ],
     "module": "ESNext",
-    "rootDir": "./src",
+    "rootDir": "./",
     "baseUrl": ".",
     "strict": false,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
-    "sourceMap": true
+    "sourceMap": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
