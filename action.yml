@@ -24,4 +24,4 @@ inputs:
     default: ''
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/zxilly/animatedtimeline:master'
+  image: 'docker://ghcr.io/zxilly/animatedtimeline:1.0.0'
