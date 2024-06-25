@@ -21,4 +21,4 @@ jobs:
         with:
           name: ${{ matrix.type }}
           path: |
-            animation.*
+            animation*
