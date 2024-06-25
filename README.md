@@ -8,7 +8,7 @@ Create animation from your GitHub contribution.
 
 ```yaml
 - name: Generate
-  uses: Zxilly/animated-timeline@v1
+  uses: Zxilly/animated-timeline@v1.0.1
   with:
     name: 'Zxilly' # optional
     output: 'assets/animation.webp'
