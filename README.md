@@ -2,7 +2,7 @@
 
 Create animation from your GitHub contribution.
 
-![image](https://github.com/Zxilly/animated-timeline/assets/31370133/aea53992-5368-48d1-a0e8-f2d79c4dc0a3)
+![animation](https://github.com/Zxilly/animated-timeline/assets/31370133/d2e6f8d9-6e7e-4e16-8264-165156a30b66)
 
 ## Usage
 
