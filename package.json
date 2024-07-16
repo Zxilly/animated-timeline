@@ -33,7 +33,7 @@
     "@types/matter-js": "^0.19.7",
     "@types/node": "^20.14.10",
     "@types/opentype.js": "^1.3.8",
-    "@typescript-eslint/parser": "^7.16.0",
+    "@typescript-eslint/parser": "^7.16.1",
     "@zxilly/bin-wrapper": "^1.0.5",
     "earcut": "^3.0.0",
     "esbuild": "^0.23.0",
