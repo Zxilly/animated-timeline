@@ -88,8 +88,8 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4
       paper:
-        specifier: ^0.12.17
-        version: 0.12.17
+        specifier: ^0.12.18
+        version: 0.12.18
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -1979,8 +1979,8 @@ packages:
   package-json-from-dist@1.0.0:
     resolution: {integrity: sha512-dATvCeZN/8wQsGywez1mzHtTlP22H8OEfPrVMLNr4/eGa+ijtLn/6M5f0dY8UKNrC2O9UCU6SSoG3qRKnt7STw==}
 
-  paper@0.12.17:
-    resolution: {integrity: sha512-oCe+e1C2w8hKIcGoAqUjD0GGxGPv+itrRXlEFUmp3H8tY/NTnHOkYgpJFPGw6OJ8Q1Wa6+RgzlY7Dx/2WWHtkA==}
+  paper@0.12.18:
+    resolution: {integrity: sha512-ZSLIEejQTJZuYHhSSqAf4jXOnii0kPhCJGAnYAANtdS72aNwXJ9cP95tZHgq1tnNpvEwgQhggy+4OarviqTCGw==}
     engines: {node: '>=8.0.0'}
 
   parent-module@1.0.1:
@@ -4383,7 +4383,7 @@ snapshots:
 
   package-json-from-dist@1.0.0: {}
 
-  paper@0.12.17: {}
+  paper@0.12.18: {}
 
   parent-module@1.0.1:
     dependencies:
