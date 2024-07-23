@@ -47,7 +47,7 @@
     "rollup": "^4.19.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.53",
