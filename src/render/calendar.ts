@@ -2,6 +2,7 @@ import {Weeks} from '../github/calendar'
 import Matter, {Bodies, World} from 'matter-js'
 import {boxSize, WIDTH, xMargin, yMargin} from './const'
 import {type ContributionLevel} from '@octokit/graphql-schema'
+import {ContributionShape} from './type/shape'
 
 function levelToDensity(level: ContributionLevel): number {
   switch (level) {
@@ -18,12 +19,16 @@ function levelToDensity(level: ContributionLevel): number {
   }
 }
 
-export function drawCalendar(world: Matter.World, weeks: Weeks): void {
+export function drawCalendar(
+  world: Matter.World,
+  weeks: Weeks,
+  shape: ContributionShape
+): void {
   const xOffset =
     WIDTH / 2 - (weeks.length / 2) * boxSize - (weeks.length / 2 - 1) * xMargin
   const yOffset = -160
 
-  const squares: Matter.Body[] = []
+  const entities: Matter.Body[] = []
   for (let i = 0; i < weeks.length; i++) {
     for (let j = 0; j < weeks[i].contributionDays.length; j++) {
       const day = weeks[i].contributionDays[j]
@@ -33,16 +38,40 @@ export function drawCalendar(world: Matter.World, weeks: Weeks): void {
 
       const x = xOffset + i * boxSize + (i - 1) * xMargin
       const y = yOffset + j * boxSize + (j - 1) * yMargin
-      const square = Bodies.rectangle(x, y, boxSize, boxSize, {
-        render: {
-          fillStyle: day.color
-        },
-        density
-      })
-
-      squares.push(square)
+      switch (shape) {
+        case 'square': {
+          const square = Bodies.rectangle(x, y, boxSize, boxSize, {
+            render: {
+              fillStyle: day.color
+            },
+            density
+          })
+          entities.push(square)
+          break
+        }
+        case 'circle': {
+          const circle = Bodies.circle(x, y, boxSize / 2, {
+            render: {
+              fillStyle: day.color
+            },
+            density
+          })
+          entities.push(circle)
+          break
+        }
+        case 'triangle': {
+          const triangle = Bodies.polygon(x, y, 3, boxSize / 1.5, {
+            render: {
+              fillStyle: day.color
+            },
+            density
+          })
+          entities.push(triangle)
+          break
+        }
+      }
     }
   }
 
-  World.add(world, squares)
+  World.add(world, entities)
 }

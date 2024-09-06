@@ -18,6 +18,7 @@ import {isWorldStopped, maxWorldSpeed} from './utils'
 import {drawText, loadFont, useFont} from './text'
 import {setBounds} from './bounds'
 import {EncoderType, loadEncoder} from './encoder'
+import {ContributionShape} from './type/shape'
 
 interface renderOptions {
   token: string
@@ -26,6 +27,7 @@ interface renderOptions {
   output: string
   font: string
   type: EncoderType
+  shape: ContributionShape
 }
 
 export async function renderAnimatedGif(options: renderOptions): Promise<void> {
@@ -46,7 +48,7 @@ export async function renderAnimatedGif(options: renderOptions): Promise<void> {
 
   setBounds(engine.world)
   drawText(engine.world, name)
-  drawCalendar(engine.world, weeks)
+  drawCalendar(engine.world, weeks, options.shape)
 
   const encoder = loadEncoder(options.type)
 

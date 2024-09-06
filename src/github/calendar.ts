@@ -1,6 +1,5 @@
 import * as github from '@actions/github'
-import type {User} from '@octokit/graphql-schema'
-import {ContributionCalendarWeek} from '@octokit/graphql-schema'
+import type {User, ContributionCalendarWeek} from '@octokit/graphql-schema'
 import {setFailed} from '@actions/core'
 
 // language=GraphQL

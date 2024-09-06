@@ -47,13 +47,20 @@ async function run(): Promise<void> {
 
   const font = getInput('font')
 
+  const shape = getInput('shape')
+  if (!['circle', 'square', 'triangle'].includes(shape)) {
+    setFailed(`Invalid shape: ${shape}`)
+    return
+  }
+
   await renderAnimatedGif({
     font,
     token,
     login,
     type: type as EncoderType,
     name,
-    output
+    output,
+    shape: shape as 'circle' | 'square' | 'triangle'
   })
 }
 

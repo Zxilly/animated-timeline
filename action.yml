@@ -13,6 +13,9 @@ inputs:
   type:
     description: 'Output file type, can be webp, gif or both. If omitted, it will be determined by the output file name'
     default: ''
+  shape:
+    description: 'Shape of the contribution blocks, can be circle, square or triangle'
+    default: 'square'
   token:
     description: >
       Personal access token (PAT) used
