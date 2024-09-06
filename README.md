@@ -8,7 +8,7 @@ Create animation from your GitHub contribution.
 
 ```yaml
 - name: Generate
-  uses: Zxilly/animated-timeline@v1.0.1
+  uses: Zxilly/animated-timeline@v1.1.0
   with:
     name: 'Zxilly' # optional
     output: 'assets/animation.webp'
@@ -22,4 +22,5 @@ Create animation from your GitHub contribution.
 | type      | Output file type, can be `webp`, `gif`, or both. If omitted, it will be determined by the output file name.                  | (Empty string)        |
 | token     | Personal access token (PAT) used.                                                                                            | `${{ github.token }}` |
 | login     | The target user to fetch the contributions, by default it is the username of the token.                                      | Login of the token    |
-| font      | Font file used in the animation, by default it is Noto Serif CJK SC.                                                         | Noto Serif CJK SC     |
+| font      | Font file used in the animation, by default it is Noto Serif CJK SC.                                                         | `Noto Serif CJK SC`   |
+| shape     | Shape of the contribution block, can be `square`, `circle`, or `triangle`.                                                   | `square`              |
