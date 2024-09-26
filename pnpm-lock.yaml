@@ -55,8 +55,8 @@ importers:
         specifier: ^0.19.7
         version: 0.19.7
       '@types/node':
-        specifier: ^22.7.0
-        version: 22.7.0
+        specifier: ^22.7.2
+        version: 22.7.2
       '@types/opentype.js':
         specifier: ^1.3.8
         version: 1.3.8
@@ -101,7 +101,7 @@ importers:
         version: 6.1.1(esbuild@0.24.0)(rollup@4.22.4)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.7.0)(typescript@5.6.2)
+        version: 10.9.2(@types/node@22.7.2)(typescript@5.6.2)
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
@@ -674,8 +674,8 @@ packages:
   '@types/matter-js@0.19.7':
     resolution: {integrity: sha512-dlh50YEh1lQS4fiCDGBnK75ocHQIq/1E371Qk6hASJImICIivdZQC2GkOqnfBm0Hac2xLk5+yrqRFDAEfj/yLA==}
 
-  '@types/node@22.7.0':
-    resolution: {integrity: sha512-MOdOibwBs6KW1vfqz2uKMlxq5xAfAZ98SZjO8e3XnAbFnTJtAspqhWk7hrdSAs9/Y14ZWMiy7/MxMUzAOadYEw==}
+  '@types/node@22.7.2':
+    resolution: {integrity: sha512-866lXSrpGpgyHBZUa2m9YNWqHDjjM0aBTJlNtYaGEw4rqY/dcD7deRVTbBBAJelfA7oaGDbNftXF/TL/A6RgoA==}
 
   '@types/opentype.js@1.3.8':
     resolution: {integrity: sha512-H6qeTp03jrknklSn4bpT1/9+1xCAEIU2CnjcWPkicJy8A1SKuthanbvoHYMiv79/2W3Xn1XE4gfSJFzt2U3JSw==}
@@ -2505,7 +2505,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 22.7.0
+      '@types/node': 22.7.2
       '@types/yargs': 17.0.32
       chalk: 4.1.2
 
@@ -2763,7 +2763,7 @@ snapshots:
 
   '@types/decompress@4.2.7':
     dependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.7.2
 
   '@types/earcut@2.1.4': {}
 
@@ -2773,7 +2773,7 @@ snapshots:
 
   '@types/got@9.6.12':
     dependencies:
-      '@types/node': 22.7.0
+      '@types/node': 22.7.2
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.1
 
@@ -2798,7 +2798,7 @@ snapshots:
 
   '@types/matter-js@0.19.7': {}
 
-  '@types/node@22.7.0':
+  '@types/node@22.7.2':
     dependencies:
       undici-types: 6.19.6
 
@@ -4028,7 +4028,7 @@ snapshots:
   jest-util@29.7.0:
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 22.7.0
+      '@types/node': 22.7.2
       chalk: 4.1.2
       ci-info: 3.9.0
       graceful-fs: 4.2.11
@@ -4518,14 +4518,14 @@ snapshots:
     dependencies:
       typescript: 5.6.2
 
-  ts-node@10.9.2(@types/node@22.7.0)(typescript@5.6.2):
+  ts-node@10.9.2(@types/node@22.7.2)(typescript@5.6.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.7.0
+      '@types/node': 22.7.2
       acorn: 8.12.0
       acorn-walk: 8.3.3
       arg: 4.1.3
