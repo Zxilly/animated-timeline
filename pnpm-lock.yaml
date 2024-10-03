@@ -16,8 +16,8 @@ importers:
         version: 1.0.1
     devDependencies:
       '@actions/core':
-        specifier: ^1.10.1
-        version: 1.10.1
+        specifier: ^1.11.0
+        version: 1.11.0
       '@actions/github':
         specifier: ^6.0.0
         version: 6.0.0
@@ -108,14 +108,20 @@ importers:
 
 packages:
 
-  '@actions/core@1.10.1':
-    resolution: {integrity: sha512-3lBR9EDAY+iYIpTnTIXmWcNbX3T2kCkAEQGIQx4NVQ0575nk2k3GRZDTPQG+vVtS2izSLmINlxXf0uLtnrTP+g==}
+  '@actions/core@1.11.0':
+    resolution: {integrity: sha512-I21jQUzEjbZolw3jFZ/0iHGCb+rePCww9MaA0SbVFae4FpBTQWP1GIvr/m5Y6GVaxrDz7p3RhBtpBzwkA3rPSA==}
+
+  '@actions/exec@1.1.1':
+    resolution: {integrity: sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==}
 
   '@actions/github@6.0.0':
     resolution: {integrity: sha512-alScpSVnYmjNEXboZjarjukQEzgCRmjMv6Xj47fsdnqGS73bjJNDpiiXmp8jr0UZLdUB6d9jW63IcmddUP+l0g==}
 
   '@actions/http-client@2.2.1':
     resolution: {integrity: sha512-KhC/cZsq7f8I4LfZSJKgCvEwfkE8o1538VoBeoGzokVLLnbFDEAdFD3UhoMklxo2un9NJVBdANOresx7vTHlHw==}
+
+  '@actions/io@1.1.3':
+    resolution: {integrity: sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==}
 
   '@babel/code-frame@7.24.7':
     resolution: {integrity: sha512-BcYH1CVJBO9tvyIZ2jVeXgSIMvGZ2FDRvDdOIVQyuklNKSsx+eppDEBq/g47Ayw+RqNFE+URvOShmf+f/qwAlA==}
@@ -2291,10 +2297,6 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  uuid@8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
-
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
@@ -2346,10 +2348,14 @@ packages:
 
 snapshots:
 
-  '@actions/core@1.10.1':
+  '@actions/core@1.11.0':
     dependencies:
+      '@actions/exec': 1.1.1
       '@actions/http-client': 2.2.1
-      uuid: 8.3.2
+
+  '@actions/exec@1.1.1':
+    dependencies:
+      '@actions/io': 1.1.3
 
   '@actions/github@6.0.0':
     dependencies:
@@ -2362,6 +2368,8 @@ snapshots:
     dependencies:
       tunnel: 0.0.6
       undici: 5.28.4
+
+  '@actions/io@1.1.3': {}
 
   '@babel/code-frame@7.24.7':
     dependencies:
@@ -4623,8 +4631,6 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
-
-  uuid@8.3.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
 
