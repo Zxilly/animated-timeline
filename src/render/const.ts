@@ -3,7 +3,7 @@ import process from 'process'
 export const WIDTH = 1200
 export const HEIGHT = 500
 
-export const MAX_PIC_TIME = 12
+export const MAX_PIC_TIME = 20
 
 export const xMargin = 4
 export const yMargin = 4
