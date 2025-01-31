@@ -76,8 +76,8 @@ importers:
         specifier: ^9.19.0
         version: 9.19.0
       eslint-plugin-github:
-        specifier: ^5.1.6
-        version: 5.1.6(eslint@9.19.0)(typescript@5.7.3)
+        specifier: ^5.1.7
+        version: 5.1.7(eslint@9.19.0)(typescript@5.7.3)
       gifenc:
         specifier: ^1.0.3
         version: 1.0.3
@@ -1040,8 +1040,8 @@ packages:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
 
-  caniuse-lite@1.0.30001695:
-    resolution: {integrity: sha512-vHyLade6wTgI2u1ec3WQBxv+2BrTERV28UXQu9LO6lZ9pYeMk34vjXFLOxo1A4UBA8XTL4njRQZdno/yYaSmWw==}
+  caniuse-lite@1.0.30001696:
+    resolution: {integrity: sha512-pDCPkvzfa39ehJtJ+OwGT/2yvT2SbjfHhiIW2LWOAcMQ7BzwxT/XuyUp4OTOd0XFWA6BKw0JalnBHgSi5DGJBQ==}
 
   chalk@2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
@@ -1183,8 +1183,8 @@ packages:
   earcut@3.0.1:
     resolution: {integrity: sha512-0l1/0gOjESMeQyYaK5IDiPNvFeu93Z/cO0TjZh9eZ1vyCtZnA7KMZ8rQggpsJHIbGSdrqYq9OhuveadOVHCshw==}
 
-  electron-to-chromium@1.5.88:
-    resolution: {integrity: sha512-K3C2qf1o+bGzbilTDCTBhTQcMS9KW60yTAaTeeXsfvQuTDDwlokLam/AdqlqcSy9u4UainDgsHV23ksXAOgamw==}
+  electron-to-chromium@1.5.90:
+    resolution: {integrity: sha512-C3PN4aydfW91Natdyd449Kw+BzhLmof6tzy5W1pFC5SpQxVXT+oyiyOG9AgYYSN9OdA/ik3YkCrpwqI8ug5Tug==}
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -1286,8 +1286,8 @@ packages:
     peerDependencies:
       eslint: '*'
 
-  eslint-plugin-github@5.1.6:
-    resolution: {integrity: sha512-7DY92UOUoapfxR0iYTEb1FaEajcRBY33UB8z+DEtbpak4jEJhSremjXHDAevKCdEztnUVZbS6ZbbK11Tqs8bpA==}
+  eslint-plugin-github@5.1.7:
+    resolution: {integrity: sha512-P3S5TwvHy8u1QadfcI/tZ2uNFMTHv+mT/YmEdLEgEzp08mA3iK02kg/IhoWOz0SnbTyUi1qrq0a6SwC3uQSkpQ==}
     hasBin: true
     peerDependencies:
       eslint: ^8 || ^9
@@ -3195,8 +3195,8 @@ snapshots:
 
   browserslist@4.24.4:
     dependencies:
-      caniuse-lite: 1.0.30001695
-      electron-to-chromium: 1.5.88
+      caniuse-lite: 1.0.30001696
+      electron-to-chromium: 1.5.90
       node-releases: 2.0.19
       update-browserslist-db: 1.1.2(browserslist@4.24.4)
 
@@ -3233,7 +3233,7 @@ snapshots:
 
   callsites@3.1.0: {}
 
-  caniuse-lite@1.0.30001695: {}
+  caniuse-lite@1.0.30001696: {}
 
   chalk@2.4.2:
     dependencies:
@@ -3356,7 +3356,7 @@ snapshots:
 
   earcut@3.0.1: {}
 
-  electron-to-chromium@1.5.88: {}
+  electron-to-chromium@1.5.90: {}
 
   emoji-regex@9.2.2: {}
 
@@ -3518,7 +3518,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       lodash.upperfirst: 4.3.1
 
-  eslint-plugin-github@5.1.6(eslint@9.19.0)(typescript@5.7.3):
+  eslint-plugin-github@5.1.7(eslint@9.19.0)(typescript@5.7.3):
     dependencies:
       '@eslint/compat': 1.2.5(eslint@9.19.0)
       '@eslint/eslintrc': 3.2.0
