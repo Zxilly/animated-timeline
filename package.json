@@ -45,7 +45,7 @@
     "paper": "^0.12.18",
     "prettier": "^3.4.2",
     "rollup": "^4.34.2",
-    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-esbuild": "^6.2.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },
