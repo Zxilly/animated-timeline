@@ -20,7 +20,7 @@
   "devDependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
-    "@octokit/graphql-schema": "^15.25.0",
+    "@octokit/graphql-schema": "^15.26.0",
     "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
