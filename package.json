@@ -50,7 +50,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^0.1.67",
+    "@napi-rs/canvas": "^0.1.68",
     "@woff2/woff2-rs": "^1.0.1"
   }
 }
