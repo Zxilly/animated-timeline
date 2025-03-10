@@ -37,7 +37,7 @@
     "@zxilly/bin-wrapper": "^1.0.5",
     "earcut": "^3.0.1",
     "esbuild": "^0.25.0",
-    "eslint": "^9.21.0",
+    "eslint": "^9.22.0",
     "eslint-plugin-github": "^5.1.8",
     "gifenc": "^1.0.3",
     "matter-js": "^0.20.0",
