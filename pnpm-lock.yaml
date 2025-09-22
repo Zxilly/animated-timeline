@@ -52,8 +52,8 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@types/matter-js':
-        specifier: ^0.20.0
-        version: 0.20.0
+        specifier: ^0.20.2
+        version: 0.20.2
       '@types/node':
         specifier: ^24.5.2
         version: 24.5.2
@@ -800,8 +800,8 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
-  '@types/matter-js@0.20.0':
-    resolution: {integrity: sha512-jOroeU1wEoizJ3rUnhS2HWzqbQrMHEmShTPUf8sbAghuZCAEQT7y3ojXAzrcQOWYkP93KhegDZI4gvMu5odfWw==}
+  '@types/matter-js@0.20.2':
+    resolution: {integrity: sha512-3PPKy3QxvZ89h9+wdBV2488I1JLVs7DEpIkPvgO8JC1mUdiVSO37ZIvVctOTD7hIq8OAL2gJ3ugGSuUip6DhCw==}
 
   '@types/node@24.5.2':
     resolution: {integrity: sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==}
@@ -3051,7 +3051,7 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
-  '@types/matter-js@0.20.0': {}
+  '@types/matter-js@0.20.2': {}
 
   '@types/node@24.5.2':
     dependencies:
