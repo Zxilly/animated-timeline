@@ -55,8 +55,8 @@ importers:
         specifier: ^0.20.2
         version: 0.20.2
       '@types/node':
-        specifier: ^24.7.0
-        version: 24.7.0
+        specifier: ^24.7.1
+        version: 24.7.1
       '@types/opentype.js':
         specifier: ^1.3.8
         version: 1.3.8
@@ -101,7 +101,7 @@ importers:
         version: 6.2.1(esbuild@0.25.10)(rollup@4.52.4)
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@24.7.0)(typescript@5.8.3)
+        version: 10.9.2(@types/node@24.7.1)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -803,8 +803,8 @@ packages:
   '@types/matter-js@0.20.2':
     resolution: {integrity: sha512-3PPKy3QxvZ89h9+wdBV2488I1JLVs7DEpIkPvgO8JC1mUdiVSO37ZIvVctOTD7hIq8OAL2gJ3ugGSuUip6DhCw==}
 
-  '@types/node@24.7.0':
-    resolution: {integrity: sha512-IbKooQVqUBrlzWTi79E8Fw78l8k1RNtlDDNWsFZs7XonuQSJ8oNYfEeclhprUldXISRMLzBpILuKgPlIxm+/Yw==}
+  '@types/node@24.7.1':
+    resolution: {integrity: sha512-CmyhGZanP88uuC5GpWU9q+fI61j2SkhO3UGMUdfYRE6Bcy0ccyzn1Rqj9YAB/ZY4kOXmNf0ocah5GtphmLMP6Q==}
 
   '@types/opentype.js@1.3.8':
     resolution: {integrity: sha512-H6qeTp03jrknklSn4bpT1/9+1xCAEIU2CnjcWPkicJy8A1SKuthanbvoHYMiv79/2W3Xn1XE4gfSJFzt2U3JSw==}
@@ -2702,7 +2702,7 @@ snapshots:
 
   '@jest/pattern@30.0.0':
     dependencies:
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       jest-regex-util: 30.0.0
 
   '@jest/schemas@30.0.0':
@@ -2715,7 +2715,7 @@ snapshots:
       '@jest/schemas': 30.0.0
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       '@types/yargs': 17.0.33
       chalk: 4.1.2
 
@@ -3013,7 +3013,7 @@ snapshots:
 
   '@types/decompress@4.2.7':
     dependencies:
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
 
   '@types/earcut@3.0.0': {}
 
@@ -3023,7 +3023,7 @@ snapshots:
 
   '@types/got@9.6.12':
     dependencies:
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.1
 
@@ -3050,7 +3050,7 @@ snapshots:
 
   '@types/matter-js@0.20.2': {}
 
-  '@types/node@24.7.0':
+  '@types/node@24.7.1':
     dependencies:
       undici-types: 7.14.0
 
@@ -4259,7 +4259,7 @@ snapshots:
   jest-mock@30.0.0:
     dependencies:
       '@jest/types': 30.0.0
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       jest-util: 30.0.0
 
   jest-regex-util@30.0.0: {}
@@ -4267,7 +4267,7 @@ snapshots:
   jest-util@30.0.0:
     dependencies:
       '@jest/types': 30.0.0
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       chalk: 4.1.2
       ci-info: 4.2.0
       graceful-fs: 4.2.11
@@ -4798,14 +4798,14 @@ snapshots:
     dependencies:
       typescript: 5.8.3
 
-  ts-node@10.9.2(@types/node@24.7.0)(typescript@5.8.3):
+  ts-node@10.9.2(@types/node@24.7.1)(typescript@5.8.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 24.7.0
+      '@types/node': 24.7.1
       acorn: 8.12.0
       acorn-walk: 8.3.3
       arg: 4.1.3
