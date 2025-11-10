@@ -36,7 +36,7 @@
     "@typescript-eslint/parser": "^8.46.3",
     "@zxilly/bin-wrapper": "^1.0.5",
     "earcut": "^3.0.2",
-    "esbuild": "^0.25.12",
+    "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "eslint-plugin-github": "^6.0.0",
     "gifenc": "^1.0.3",
