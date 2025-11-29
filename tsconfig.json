@@ -11,6 +11,7 @@
     ],
     "module": "ESNext",
     "rootDir": "./",
+    "outDir": "./dist",
     "baseUrl": ".",
     "strict": false,
     "noImplicitAny": true,
