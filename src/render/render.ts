@@ -1,6 +1,6 @@
 import {Composite, Engine, Render} from 'matter-js'
 import {createCanvas} from '@napi-rs/canvas'
-import core from '@actions/core'
+import * as core from '@actions/core'
 import fs from 'fs'
 import path from 'path'
 import {getCalendar} from '../github/calendar'

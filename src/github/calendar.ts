@@ -34,7 +34,7 @@ export async function getCalendar(
   const octokit = github.getOctokit(token)
 
   if (login === '') {
-    const current = await octokit.rest.users.getAuthenticated().catch(e => {
+    const current = await octokit.rest.users.getAuthenticated().catch((e: any) => {
       setFailed("Couldn't get authenticated user, should set login manually")
       throw e
     })
@@ -45,7 +45,7 @@ export async function getCalendar(
     .graphql<{user: User}>(query, {
       login
     })
-    .catch(e => {
+    .catch((e: any) => {
       setFailed('Failed to fetch calendar data')
       throw e
     })
