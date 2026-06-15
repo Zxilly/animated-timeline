@@ -44,7 +44,7 @@
     "opentype.js": "^2.0.0",
     "paper": "^0.12.18",
     "prettier": "^3.8.4",
-    "rollup": "^4.61.1",
+    "rollup": "^4.62.0",
     "rollup-plugin-esbuild": "^6.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
