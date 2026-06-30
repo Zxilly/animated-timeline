@@ -43,7 +43,7 @@
     "matter-js": "^0.20.0",
     "opentype.js": "^2.0.0",
     "paper": "^0.12.18",
-    "prettier": "^3.9.1",
+    "prettier": "^3.9.4",
     "rollup": "^4.62.2",
     "rollup-plugin-esbuild": "^6.2.1",
     "ts-node": "^10.9.2",
