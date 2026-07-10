@@ -38,7 +38,7 @@
     "earcut": "^3.2.3",
     "esbuild": "^0.28.1",
     "eslint": "^9.39.2",
-    "eslint-plugin-github": "^6.0.0",
+    "eslint-plugin-github": "^6.1.0",
     "gifenc": "^1.0.3",
     "matter-js": "^0.20.0",
     "opentype.js": "^2.0.0",
