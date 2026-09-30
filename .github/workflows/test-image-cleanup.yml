@@ -1,0 +1,23 @@
+name: Test image cleanup
+on:
+  pull_request:
+    paths:
+      - .github/scripts/should-delete-image.cjs
+      - .github/workflows/clean.yml
+      - .github/workflows/test-image-cleanup.yml
+      - action.yml
+      - test/image-cleanup.test.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: node --test test/image-cleanup.test.mjs
