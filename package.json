@@ -6,6 +6,7 @@
   "type": "module",
   "main": "src/action.ts",
   "scripts": {
+    "test:cleanup": "node --test test/image-cleanup.test.mjs",
     "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
