@@ -8,9 +8,11 @@
   "scripts": {
     "test:cleanup": "node --test test/image-cleanup.test.mjs",
     "build": "rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "format": "prettier --write **/*.ts",
-    "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/**/*.ts"
+    "format": "prettier --write \"src/**/*.ts\" \"rollup.config.ts\" \"eslint.config.js\" \"test/*.mjs\"",
+    "format-check": "prettier --check \"src/**/*.ts\" \"rollup.config.ts\" \"eslint.config.js\" \"test/*.mjs\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs"
   },
   "repository": {
     "type": "git",
@@ -34,13 +36,15 @@
     "@types/matter-js": "^0.20.2",
     "@types/node": "^26.6.1",
     "@types/opentype.js": "^1.3.10",
-    "@typescript-eslint/parser": "^8.70.0",
+    "@typescript-eslint/eslint-plugin": "8.71.0",
+    "@typescript-eslint/parser": "^8.71.0",
     "@zxilly/bin-wrapper": "^1.0.5",
     "earcut": "^3.2.3",
     "esbuild": "^0.28.2",
     "eslint": "^9.39.2",
     "eslint-plugin-github": "^6.1.2",
     "gifenc": "^1.0.3",
+    "globals": "14.0.0",
     "matter-js": "^0.20.0",
     "opentype.js": "^2.0.0",
     "paper": "^0.12.18",
