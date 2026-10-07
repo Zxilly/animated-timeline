@@ -27,7 +27,9 @@ for (const [name, tags, expected] of cases) {
 
 test('the runtime image pinned by action.yml is protected', () => {
   const action = readFileSync(new URL('../action.yml', import.meta.url), 'utf8')
-  const tag = action.match(/docker:\/\/ghcr\.io\/zxilly\/animatedtimeline:([^\s'"\r\n]+)/)?.[1]
+  const tag = action.match(
+    /docker:\/\/ghcr\.io\/zxilly\/animatedtimeline:([^\s'"\r\n]+)/
+  )?.[1]
   assert.ok(tag, 'expected an explicit runtime image tag in action.yml')
   assert.equal(shouldDelete({metadata: {container: {tags: [tag]}}}), false)
 })

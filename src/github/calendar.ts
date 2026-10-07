@@ -34,10 +34,12 @@ export async function getCalendar(
   const octokit = github.getOctokit(token)
 
   if (login === '') {
-    const current = await octokit.rest.users.getAuthenticated().catch((e: any) => {
-      setFailed("Couldn't get authenticated user, should set login manually")
-      throw e
-    })
+    const current = await octokit.rest.users
+      .getAuthenticated()
+      .catch((e: any) => {
+        setFailed("Couldn't get authenticated user, should set login manually")
+        throw e
+      })
     login = current.data.login
   }
 
