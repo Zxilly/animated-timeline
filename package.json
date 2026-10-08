@@ -55,7 +55,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@napi-rs/canvas": "^1.0.9",
+    "@napi-rs/canvas": "^1.0.10",
     "@woff2/woff2-rs": "^1.0.1"
   },
   "packageManager": "pnpm@10.24.0"
