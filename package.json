@@ -44,7 +44,7 @@
     "eslint": "^9.39.2",
     "eslint-plugin-github": "^6.1.2",
     "gifenc": "^1.0.3",
-    "globals": "14.0.0",
+    "globals": "17.13.0",
     "matter-js": "^0.20.0",
     "opentype.js": "^2.0.0",
     "paper": "^0.12.18",
