@@ -47,7 +47,7 @@
     "globals": "17.13.0",
     "matter-js": "^0.20.0",
     "opentype.js": "^2.0.0",
-    "paper": "^0.12.18",
+    "paper": "^0.16.0",
     "prettier": "^3.9.10",
     "rollup": "^4.64.12",
     "rollup-plugin-esbuild": "^6.2.1",
