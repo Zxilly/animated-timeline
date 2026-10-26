@@ -30,7 +30,7 @@
     "@rollup/plugin-typescript": "^12.3.0",
     "@rollup/plugin-url": "^8.0.2",
     "@rollup/plugin-wasm": "^6.2.2",
-    "@types/earcut": "^3.0.0",
+    "@types/earcut": "^3.2.4",
     "@types/gifsicle": "^5.2.2",
     "@types/jest": "^30.0.0",
     "@types/matter-js": "^0.20.2",
