@@ -94,8 +94,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       paper:
-        specifier: ^0.12.18
-        version: 0.12.18
+        specifier: ^0.16.0
+        version: 0.16.0
       prettier:
         specifier: ^3.9.10
         version: 3.9.10
@@ -2189,8 +2189,8 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
-  paper@0.12.18:
-    resolution: {integrity: sha512-ZSLIEejQTJZuYHhSSqAf4jXOnii0kPhCJGAnYAANtdS72aNwXJ9cP95tZHgq1tnNpvEwgQhggy+4OarviqTCGw==}
+  paper@0.16.0:
+    resolution: {integrity: sha512-MVkNFA40Afe1HbOJfP1i/WBGrEBfo3e8qO/wniNyQbN5RdW+A5JpLxNCYaUk7aFCV1KMDSErmk7ri6tyJ8bJQA==}
     engines: {node: '>=8.0.0'}
 
   parent-module@1.0.1:
@@ -4755,7 +4755,7 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
-  paper@0.12.18: {}
+  paper@0.16.0: {}
 
   parent-module@1.0.1:
     dependencies:
