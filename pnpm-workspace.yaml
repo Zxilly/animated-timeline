@@ -1,2 +1,5 @@
 onlyBuiltDependencies:
   - esbuild
+
+patchedDependencies:
+  minimatch@10.2.6: patches/minimatch@10.2.6.patch
